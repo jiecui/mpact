@@ -17,8 +17,8 @@
 %
 % See also .
 
-% Copyright 2004-2016 Richard J. Cui. Created: Mon 09/27/2004  1:23:52.278 PM
-% $ Revision: 1.2 $  $ Date: Fri 12/16/2016  8:38:40.258 AM $
+% Copyright 2004-2017 Richard J. Cui. Created: Mon 09/27/2004  1:23:52.278 PM
+% $ Revision: 1.3 $  $ Date: Fri 02/10/2017  6:35:19.981 PM $
 %
 % 3236 E Chandler Blvd Unit 2036
 % Phoenix, AZ 85048, USA
@@ -142,58 +142,5 @@ title 'Error = Clean - Recon';
 
 end % function
 
-% function show_decomp(s, P, fig_name)
-% % Display the results of decomposition
-% 
-% x       = hilbert(s);
-% nfreq   = 512;
-% fs      = 1;
-% dbs     = 30; % dbs  range in dBs (optional, default is 25)
-% decf    = 1; % sub-sampling factor in time of the stft (must be integer)
-% w       = 05; % window width or window, must be a odd number
-% N       = length(x);
-% 
-% % Show fft spectrogram
-% % --------------------
-% [sx, t, f] = real_spec2(x, fs, nfreq, decf, w);   % spectrum without noise
-% show_tfd(sx, s, dbs, t, f);
-% set(gcf, 'Name', 'Spectrogram')
-% 
-% % show chirplet spectrogram
-% % ---------------------------------------
-% t_r = linspace(t(1), t(2), 2 * N); % time range
-% f_r = linspace(f(1), f(2), nfreq / 2 + 1); % frequency range
-% % esitmate WVD of chirplets directly
-% wrx = chirplet_spgrm(P, t_r, f_r, 'Method', 'direct');
-% show_tfd(wrx, s, dbs, t, f); % dB scale
-% set(gcf, 'Name', fig_name)
-% 
-% % use the explicit functions to calculate chirplet spectrogram
-% wig = chirplet_spgrm(P, t_r, f_r);
-% show_tfd(wig, s, dbs, t, f)
-% set(gcf, 'Name', fig_name)
-% 
-% end % function
-
-% function varargout = mp_act_signal(s, Q, M, D, i0, a, ref_alg, verbose, mnits)
-% % perform mp adaptive chirplet decomposition
-% 
-% % decompose spn
-% % -------------
-% x = hilbert(s); % convert the signal into an analytical signal
-% P = mp_adapt_chirplets(x, Q, M, D, i0, a, verbose, mnits,...
-%     'RefineAlgorithm', ref_alg);
-% 
-% % Display the results of decomposition
-% % -----------------------------------
-% show_decomp(s, P, ref_alg)
-% 
-% % output
-% % ------
-% if nargout > 0
-%     varargout{1} = P;
-% end % if
-% 
-% end % function
 
 % [EOF]

@@ -1,0 +1,33 @@
+# Copyright 2017 Richard J. Cui. Created: Fri 02/10/2017  5:15:40.153 PM
+# $ Revision: 0.1 $  $ Date: Fri 02/10/2017  5:15:40.153 PM $
+#
+# 3236 E Chandler Blvd Unit 2036
+# Phoenix, AZ 85048, USA
+#
+# Email: richard.jie.cui@gmail.com
+
+# -----------------------------------
+# register basic matlab binary files
+# -----------------------------------
+*.mlx -crlf -diff -merge
+*.mat -crlf -diff -merge
+*.fig -crlf -diff -merge
+*.p -crlf -diff -merge
+*.slx -crlf -diff -merge
+*.mdl -crlf -diff -merge
+
+# -------------------------------------
+# register other possible binary files
+# -------------------------------------
+*.mdlp -crlf -diff -merge
+*.slxp -crlf -diff -merge
+*.sldd -crlf -diff -merge
+*.mexa64 -crlf -diff -merge
+*.mexw64 -crlf -diff -merge
+*.mexmaci64 -crlf -diff -merge
+*.xlsx -crlf -diff -merge
+*.docx -crlf -diff -merge
+*.pdf -crlf -diff -merge
+*.jpg -crlf -diff -merge
+*.png -crlf -diff -merge
+
