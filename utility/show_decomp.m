@@ -4,6 +4,10 @@ function show_decomp(s, P, fs, fig_name)
 % Syntax:
 %
 % Input(s):
+%   s           - the orignal (real) signal
+%   P           - chirplet structure
+%   fs          - sampling frequency
+%   fig_name    - name of the figures
 %
 % Output(s):
 %
@@ -15,8 +19,8 @@ function show_decomp(s, P, fs, fig_name)
 %
 % See also .
 
-% Copyright 2016 Richard J. Cui. Created: Sat 12/17/2016 10:37:41.537 AM
-% $Revision: 0.1 $  $Date: Sat 12/17/2016 10:37:41.568 AM $
+% Copyright 2016-2017 Richard J. Cui. Created: Sat 12/17/2016 10:37:41.537 AM
+% $Revision: 0.3 $  $Date: Sun 02/19/2017 10:05:56.162 PM $
 %
 % 3236 E Chandler Blvd Unit 2036
 % Phoenix, AZ 85048, USA
@@ -26,7 +30,7 @@ function show_decomp(s, P, fs, fig_name)
 x       = hilbert(s);
 N       = length(x);
 nfreq   = 4 * N;
-dbs     = 30; % dbs  range in dBs (optional, default is 25)
+dbs     = 30; % dbs range in dBs (optional, default is 25)
 decf    = 1; % sub-sampling factor in time of the stft (must be integer)
 w       = 05; % window width or window, must be a odd number
 
@@ -38,16 +42,17 @@ set(gcf, 'Name', 'Spectrogram')
 
 % show chirplet spectrogram
 % ---------------------------------------
+rs = real(make_chirplets(N, P)); % reconstructed signal
 t_r = linspace(t(1), t(2), 2 * N); % time range
 f_r = linspace(f(1), f(2), nfreq / 2 + 1); % frequency range
 % esitmate WVD of chirplets directly
 wrx = chirplet_spgrm(P, t_r, f_r, 'Method', 'direct');
-show_tfd(wrx, s, dbs, t, f); % dB scale
+show_tfd(wrx, rs, dbs, t, f); % dB scale
 set(gcf, 'Name', fig_name)
 
 % use the explicit functions to calculate chirplet spectrogram
 wig = chirplet_spgrm(P, t_r, f_r);
-show_tfd(wig, s, dbs, t, f)
+show_tfd(wig, rs, dbs, t, f)
 set(gcf, 'Name', fig_name)
 
 end % function show_decomp

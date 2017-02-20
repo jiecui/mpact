@@ -4,7 +4,8 @@ function varargout = mp_act_signal(s, Q, M, D, i0, a, ref_alg, verbose, mnits, l
 % Syntax:
 %
 % Input(s):
-%
+%   ref_alg         - refinement algorithm
+% 
 % Output(s):
 %
 % Example:
@@ -15,8 +16,8 @@ function varargout = mp_act_signal(s, Q, M, D, i0, a, ref_alg, verbose, mnits, l
 %
 % See also .
 
-% Copyright 2016 Richard J. Cui. Created: Sat 12/17/2016 10:33:10.954 AM
-% $Revision: 0.1 $  $Date: Sat 12/17/2016 10:33:10.965 AM $
+% Copyright 2016-2017 Richard J. Cui. Created: Sat 12/17/2016 10:33:10.954 AM
+% $Revision: 0.3 $  $Date: Sun 02/19/2017 10:05:56.162 PM $
 %
 % 3236 E Chandler Blvd Unit 2036
 % Phoenix, AZ 85048, USA
@@ -37,7 +38,10 @@ P = mp_adapt_chirplets(x, Q, M, D, i0, a, verbose, mnits, level,...
 
 % Display the results of decomposition
 % -----------------------------------
-show_decomp(s, P, fs, ref_alg)
+% get figure name
+fig_name = get_fig_name(ref_alg);
+% show figure
+show_decomp(s, P, fs, fig_name)
 
 % output
 % ------
