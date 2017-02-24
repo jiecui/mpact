@@ -1,15 +1,15 @@
-function [P, res] = mp_adapt_chirplets(x, Q, varargin)
-% MP_ADAPT_CHIRPLETS decompose signal with MP adaptive chirplet transform
+function [P, res] = mle_adapt_chirplets(x, Q, varargin)
+% MLE_ADAPT_CHIRPLETS decompose signal with MLE adaptive chirplet transform
 %
 %  Syntax:
-%       [P, res] = mp_adapt_chirplets(x, Q)
-%       [P, res] = mp_adapt_chirplets(x, Q, M)
-%       [P, res] = mp_adapt_chirplets(x, Q, M, D)
-%       [P, res] = mp_adapt_chirplets(x, Q, M, D, i0, radix)
-%       [P, res] = mp_adapt_chirplets(x, Q, M, D, i0, radix, verbose)
-%       [P, res] = mp_adapt_chirplets(x, Q, M, D, i0, radix, verbose, mnits)
-%       [P, res] = mp_adapt_chirplets(x, Q, M, D, i0, radix, verbose, mnits, level)
-%       [P, res] = mp_adapt_chirplets(____, 'RefineAlgorithm', ref_alg)
+%       [P, res] = mle_adapt_chirplets(x, Q)
+%       [P, res] = mle_adapt_chirplets(x, Q, M)
+%       [P, res] = mle_adapt_chirplets(x, Q, M, d)
+%       [P, res] = mle_adapt_chirplets(x, Q, M, d, cr)
+%       [P, res] = mle_adapt_chirplets(x, Q, M, d, cr, verbose)
+%       [P, res] = mle_adapt_chirplets(x, Q, M, d, cr, verbose, mnits)
+%       [P, res] = mle_adapt_chirplets(x, Q, M, d, cr, verbose, mnits, level)
+%       [P, res] = mle_adapt_chirplets(____, 'RefineAlgorithm', ref_alg)
 %
 %  Inputs:
 %       x       - signal
@@ -17,9 +17,8 @@ function [P, res] = mp_adapt_chirplets(x, Q, varargin)
 %                 'q' to quit)
 %       M       - resolution for Newton-Raphson refinement (optional, 
 %                 default = 64)
-%       D       - the depth of decomposition (default = 5)
-%       i0      - the first level to rotate the chirplets (default = 1)
-%       radix   - radix of scale (default = 2)
+%       d       - initial value of duration (default = 50)
+%       cr      - initial value of chirprate (default = 0)
 %       verbose - verbose flag, 'yes', 'no', 'vv' (default = yes)
 %       mnits   - maximum number of iterations (optional, default = 5)
 %       level   - level of difficulty of MLE
@@ -36,11 +35,14 @@ function [P, res] = mp_adapt_chirplets(x, Q, varargin)
 %   [1]	J. Cui and W. Wong, "The adaptive chirplet transform and visual 
 %       evoked potentials," IEEE Transactions on Biomedical Engineering,
 %       vol. 53, pp. 1378-1384, Jul 2006.
+%   [2]	J. C. O'Neill and P. Flandrin, "Chirp hunting," in Proceedings of
+%       the IEEE-SP International Symposium on Time-Frequency and
+%       Time-Scale Analysis, 1998, pp. 425-428.
 % 
 % See also make_chirplets.
 
-% Copyright 2005-2017 Richard J. Cui. Created: Tue 02/22/2005 2:46:52.278 PM
-% $ Revision: 1.1 $  $ Date:Wed 02/22/2017  4:38:07.949 PM $
+% Copyright 2017 Richard J. Cui. Created: Thu 02/23/2017  3:48:56.670 PM
+% $ Revision: 0.1 $  $ Date: Thu 02/23/2017  3:48:56.670 PM $
 %
 % 3236 E Chandler Blvd Unit 2036
 % Phoenix, AZ 85048, USA
@@ -55,9 +57,8 @@ p = check_inputs(x, Q, varargin{:});
 x   = p.Results.x;
 Q   = p.Results.Q;
 M   = p.Results.M;
-D   = p.Results.D;
-i0  = p.Results.i0;
-radix = p.Results.radix;
+d   = p.Results.d;
+cr  = p.Results.cr;
 verbose = p.Results.verbose;
 mnits   = p.Results.mnits;
 level   = p.Results.level;
@@ -82,16 +83,16 @@ i = 1;
 e = x; % residual
 while done == false
     % --------------------------------------------
-    % find a new chirplet with MP + Newton-Raphson
+    % find a new chirplet with MLE
     % --------------------------------------------
     if strcmp(verbose, 'yes') || strcmp(verbose, 'vv')
-        cprintf('Keywords', '\n*****************************************');
-        cprintf('Keywords', '\nSingle chirplet estimation - MP algorithm');
-        cprintf('Keywords', '\n*****************************************');
+        cprintf('Keywords', '\n******************************************');
+        cprintf('Keywords', '\nSingle chirplet estimation - MLE algorithm');
+        cprintf('Keywords', '\n******************************************');
     end % if
     
     % esimtate the i-th chirplet
-    P_i = mp_chirplet(e, M, D, i0, radix, vb);
+    P_i = best_chirplet(e, level, M, tc, fc, cr, d, vb);
     P = cat(1, P, P_i);
     
     if strcmp(verbose, 'yes') || strcmp(verbose, 'vv')
@@ -167,9 +168,8 @@ p = inputParser;
 p.addRequired('x', @isnumeric);
 p.addRequired('Q', @isnumeric);
 p.addOptional('M', 64, @isnumeric);
-p.addOptional('D', 5, @isnumeric);
-p.addOptional('i0', 1, @isnumeric);
-p.addOptional('radix', 2, @isnumeric);
+p.addOptional('d', 50, @isnumeric);
+p.addOptional('cr', 0, @isnumeric);
 p.addOptional('verbose', 'yes',...
     @(x) any(validatestring(lower(x), validVerbose)));
 p.addOptional('mnits', 5, @isnumeric);

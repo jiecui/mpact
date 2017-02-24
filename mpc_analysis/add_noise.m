@@ -1,4 +1,4 @@
-function [y, n] = add_noise(x, dsnr)
+function [y, n, snr_hat] = add_noise(x, dsnr)
 % ADD_NOISE add guassian white noise to a signal
 % 
 %  Syntax:
@@ -11,14 +11,16 @@ function [y, n] = add_noise(x, dsnr)
 %  Outputs
 %   y       - x + noise
 %   n       - noise
+%   snr_hat - estimated SNR in dB
 % 
 % Note:
-%   The function requires Communication System Toolbox
+%   The function requires Communication System Toolbox and Signal
+%   Processing Toolbox.
 % 
 % See also .
 
-% Copyright 2005-2016 Richard J. Cui. Created: Mon 03/02/2004  1:23:52.278 PM
-% $ Revision: 0.4 $  $ Fri 12/16/2016 10:40:12.417 AM $
+% Copyright 2005-2017 Richard J. Cui. Created: Mon 03/02/2004  1:23:52.278 PM
+% $ Revision: 0.5 $  $ Wed 02/22/2017 11:29:13.394 AM $
 %
 % 3236 E Chandler Blvd Unit 2036
 % Phoenix, AZ 85048, USA
@@ -27,8 +29,14 @@ function [y, n] = add_noise(x, dsnr)
 
 narginchk(1, 2);
 
+% add noise
+% ---------
 y = awgn(x, dsnr, 'measured');
 n = y - x;
+
+% estimate SNR
+% ------------
+snr_hat = snr(x, n);
 
 end % function
 

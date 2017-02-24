@@ -1,16 +1,23 @@
-function x = make_chirplets(N, P)
-% MAKE_CHIRPLETS -- make a signal that is a sum of chirplets
+function x = make_chirplets(N, P, dflag)
+% MAKE_CHIRPLETS construct a signal that is a sum of chirplets
 %
 %  sytax:
-%    x = chirplets(N, P)
+%   x = chirplets(N, P)
 %
 %  inputs:
-%    N    length of signal
-%    P    matrix of parameters [amp time-center freq-center chirp_rate duration; ...]
-%         (optional, default is [1 N/2+1 0 0 sqrt(N/4/pi)])
+%   N       - length of signal 
+%   P       - matrix of parameters [A t f cr d; ...],
+%               A:  complex amplitude = |A|e^{j\phi}
+%               t:  time center (sample or unit sampling time)
+%               f:  frequency center (rad)
+%               cr: chirprate (rad/sample)
+%               d:  chirplet duration (sample)
+%             (optional, default is [1 N/2+1 0 0 sqrt(N/4/pi)])
 %
+%   dflag   - consider the discretization effect (Optional: default 0)
+% 
 %  outputs:
-%    x    signal
+%   x       - constructed signal
 %
 % Note that d is the standard deviation of the guassian, d=sqrt(N/4/pi)
 % gives an atom with a circular Wigner distribution, and 2*sqrt(2)*d is the
@@ -23,8 +30,8 @@ function x = make_chirplets(N, P)
 %    N = 128; x = make_chirplets(N, [1 N/2+1 0 0 sqrt(N/4/pi)]);
 %    x = make_chirplets(128, [1 55 0 2*pi/128 12 ; 1 75 0 2*pi/128 12]);
 
-% Copyright 2005-2016 Richard J. Cui. Created: Thu 03/02/2005 10:33:22.814 AM
-% $ Revision: 0.3 $  $ Date: Mon 12/12/2016  1:44:06.200 PM $
+% Copyright 2005-2017 Richard J. Cui. Created: Thu 03/02/2005 10:33:22.814 AM
+% $ Revision: 0.4 $  $ Date: Tue 02/21/2017  1:53:17.867 PM $
 %
 % 3236 E Chandler Blvd Unit 2036
 % Phoenix, AZ 85048, USA
@@ -32,9 +39,11 @@ function x = make_chirplets(N, P)
 % Email: richard.jie.cui@gmail.com
 
 
-narginchk(1,2);
+narginchk(1,3);
 
-dflag = 0;      % consideration of discretization effect
+if ~exist('dflag', 'var')
+    dflag = 0;      % consideration of discretization effect (problem?)
+end % if
 
 if (nargin < 2)
     if (rem(N,2)==0)
@@ -74,10 +83,10 @@ function clet = chirplet(N,t,f,cr,d,dflag)
 %
 % Inputs:
 %   N       the signal length
-%   t       time center (second)
-%   f       frequency center (frequency center)
+%   t       time center (sample or unit sampling time)
+%   f       frequency center (rad)
 %   cr      chirp rate (rad/sample)
-%   d       time duration of the chirplet (second)
+%   d       time duration of the chirplet (sample or unit sampling time)
 %   dflag   consider the discretization effect (Optional: default 0)
 %
 % Outputs:
@@ -101,7 +110,7 @@ if dflag        % consider effect
     end %for
     clet = dcp/norm(dcp);
 else            % don't care
-    am = exp(-((n-t)/2/d).^2) * sqrt(1/sqrt(2*pi)/d);
+    am = exp(-((n-t)/2/d).^2) * sqrt(1/sqrt(2*pi)/d); % for normalization 
     chirp = exp(1i * (cr/2*(n-t).^2 + f*(n-t)));
     clet = am.*chirp;
 end %if

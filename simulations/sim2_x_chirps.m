@@ -18,7 +18,7 @@
 % See also .
 
 % Copyright 2004-2017 Richard J. Cui. Created: Mon 09/27/2004  1:23:52.278 PM
-% $ Revision: 1.5 $  $ Date: Mon 02/20/2017  9:17:09.916 AM $
+% $ Revision: 1.6 $  $ Date: Wed 02/22/2017 11:29:13.394 AM $
 %
 % 3236 E Chandler Blvd Unit 2036
 % Phoenix, AZ 85048, USA
@@ -36,8 +36,7 @@ t   = (0:N-1)'; % N seconds, sampling time = 1 sec
 s1  = chirp(t, 0, N, .5); % up-chirp: 0 -> 0.5 Hz
 s2  = flipud(s1); % down-chirp: 0.5 -> 0 Hz
 s   = s1 + s2; % synthesized signal
-[spn, ns] = add_noise(s, d_snr); % add noise to the signal (require communication toolbox)
-signr = 10 * log10(var(s)/var(ns));
+[spn, ns, signr] = add_noise(s, d_snr); % add noise to the signal (require communication toolbox)
 fprintf('Desired SNR = %.2f dB, estimated SNR = %.2f dB\n', d_snr, signr)
 
 % display the signal
@@ -72,7 +71,7 @@ i0  = 1; % the first scale to roate the atoms
 D   = 5; % decomposition depth = the higest scale
 a   = 2; % the radix of scale
 M = 256; % resolution for Newton-Raphson refinement
-verbose = false; % show notes
+verbose = 'YES'; % show notes
 mnits   = 10; % max number of iteration for refinement
 level   = 2; % difficulty of MLE (recommanded = 2)
 
