@@ -53,17 +53,21 @@ end % function test_mle_act
 function P = do_mle_act(Q, spn)
 % chirplet decomposition with MLE algorithm
 
-% Common parameters
-% -----------------
-d   = 50; % initial guess of duration
+% initial parameters
+% -------------------
+N   = length(spn); % signal length
+tc  = N/2; % time-center
+fc  = pi/2; % frequency-center
 cr  = 0; % chirprate guess
+d   = N/4; % initial guess of duration
 M   = 256; % resolution for Newton-Raphson refinement
 verbose = 'No'; % don't show notes
 mnits   = 10; % max number of iteration for refinement
 level   = 2; % difficult level
 
-P = mle_adapt_chirplets(spn, Q, M, d, cr, verbose, mnits, level,...
-    'RefineAlgorithm', 'ExpectMax');
+CP0 = [tc, fc, cr, d]; % initial chirplet parameters (no amplitude)
+P = mle_adapt_chirplets(spn, Q, M, CP0, verbose, mnits, level,...
+    'RefineAlgorithm', 'MaxLikeliEst');
 
 end % function
 

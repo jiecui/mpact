@@ -14,8 +14,8 @@
 % chirplet signals
 % ----------------
 N = 100; % signal length
-P = [1, N/2+1, pi/2,  pi/N, N/3; % up-chirplet
-     1, N/2+1, pi/2, -pi/N, N/3]; % down-chirplet
+P = [1*exp(1i*0), N/2+1, pi/2,  pi/N, N/3; % up-chirplet
+     1*exp(1i*0), N/2+1, pi/2, -pi/N, N/3]; % down-chirplet
 s = make_chirplets(N, P); % the complex signal
 
 % test paras

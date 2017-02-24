@@ -4,11 +4,10 @@ function [P, res] = mle_adapt_chirplets(x, Q, varargin)
 %  Syntax:
 %       [P, res] = mle_adapt_chirplets(x, Q)
 %       [P, res] = mle_adapt_chirplets(x, Q, M)
-%       [P, res] = mle_adapt_chirplets(x, Q, M, d)
-%       [P, res] = mle_adapt_chirplets(x, Q, M, d, cr)
-%       [P, res] = mle_adapt_chirplets(x, Q, M, d, cr, verbose)
-%       [P, res] = mle_adapt_chirplets(x, Q, M, d, cr, verbose, mnits)
-%       [P, res] = mle_adapt_chirplets(x, Q, M, d, cr, verbose, mnits, level)
+%       [P, res] = mle_adapt_chirplets(x, Q, M, CP0)
+%       [P, res] = mle_adapt_chirplets(x, Q, M, CP0, verbose)
+%       [P, res] = mle_adapt_chirplets(x, Q, M, CP0, verbose, mnits)
+%       [P, res] = mle_adapt_chirplets(x, Q, M, CP0, verbose, mnits, level)
 %       [P, res] = mle_adapt_chirplets(____, 'RefineAlgorithm', ref_alg)
 %
 %  Inputs:
@@ -17,8 +16,7 @@ function [P, res] = mle_adapt_chirplets(x, Q, varargin)
 %                 'q' to quit)
 %       M       - resolution for Newton-Raphson refinement (optional, 
 %                 default = 64)
-%       d       - initial value of duration (default = 50)
-%       cr      - initial value of chirprate (default = 0)
+%       CP0     - initial value of chirplet [tc, fc, cr, d] (default = [1 pi/2 0 1])
 %       verbose - verbose flag, 'yes', 'no', 'vv' (default = yes)
 %       mnits   - maximum number of iterations (optional, default = 5)
 %       level   - level of difficulty of MLE
@@ -42,7 +40,7 @@ function [P, res] = mle_adapt_chirplets(x, Q, varargin)
 % See also make_chirplets.
 
 % Copyright 2017 Richard J. Cui. Created: Thu 02/23/2017  3:48:56.670 PM
-% $ Revision: 0.1 $  $ Date: Thu 02/23/2017  3:48:56.670 PM $
+% $ Revision: 0.1 $  $ Date: Fri 02/24/2017 12:19:07.091 PM $
 %
 % 3236 E Chandler Blvd Unit 2036
 % Phoenix, AZ 85048, USA
@@ -57,8 +55,7 @@ p = check_inputs(x, Q, varargin{:});
 x   = p.Results.x;
 Q   = p.Results.Q;
 M   = p.Results.M;
-d   = p.Results.d;
-cr  = p.Results.cr;
+CP0   = p.Results.CP0;
 verbose = p.Results.verbose;
 mnits   = p.Results.mnits;
 level   = p.Results.level;
@@ -67,12 +64,19 @@ ref_alg = p.Results.RefineAlgorithm;
 % =========================================================================
 % find chirplets use MP-EM algorithm
 % =========================================================================
+% verbose flag
 verbose = lower(verbose);
 if strcmp(verbose, 'vv')
     vb = true;
 else
     vb = false;
 end % if
+
+% initial parameters
+tc  = CP0(1);
+fc  = CP0(2);
+cr  = CP0(3);
+d   = CP0(4);
 
 x = x(:);
 res = norm(x);
@@ -158,6 +162,12 @@ end % function
 % =========================================================================
 % subroutines
 % =========================================================================
+function yn = check_cp0(x)
+
+yn = isnumeric(x) && length(x) == 4;
+
+end % function
+
 function p = check_inputs(x, Q, varargin)
 
 validAlgorithm = { 'expectmax', 'maxlikeliest' };
@@ -168,8 +178,7 @@ p = inputParser;
 p.addRequired('x', @isnumeric);
 p.addRequired('Q', @isnumeric);
 p.addOptional('M', 64, @isnumeric);
-p.addOptional('d', 50, @isnumeric);
-p.addOptional('cr', 0, @isnumeric);
+p.addOptional('CP0', [1 pi/2 0 1], @check_cp0);
 p.addOptional('verbose', 'yes',...
     @(x) any(validatestring(lower(x), validVerbose)));
 p.addOptional('mnits', 5, @isnumeric);

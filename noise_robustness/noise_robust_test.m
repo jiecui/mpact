@@ -71,13 +71,13 @@ for m = 1:num_test
         [t_mn, P_mn] = test_mle_act(Q, spn_mn);
         tcost.MLE(m, n)         = t_mn;
         p_hat.MLE.A(m, n, :)    = P_mn.A;
-        p_hat.MLE.tc(m, n, :)   = tc_mn;
-        p_hat.MLE.fc(m, n, :)   = fc_mn;
-        p_hat.MLE.cr(m, n, :)   = cr_mn;
-        p_hat.MLE.d(m, n, :)    = d_mn;
+        p_hat.MLE.tc(m, n, :)   = P_mn.tc;
+        p_hat.MLE.fc(m, n, :)   = P_mn.fc;
+        p_hat.MLE.cr(m, n, :)   = P_mn.cr;
+        p_hat.MLE.d(m, n, :)    = P_mn.d;
     end % for
 end % for
-waitbar(m/num_test, hw)
+waitbar(m/num_test, hw), pause(.1)
 close(hw)
 
 end % function noise_robust_test
