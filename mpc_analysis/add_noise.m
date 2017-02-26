@@ -6,7 +6,7 @@ function [y, n, snr_hat] = add_noise(x, dsnr)
 %
 %  Inputs:
 %   x       - signal
-%   dsnr    - desired SNR in dB
+%   dsnr    - desired SNR in dB. if 'Inf', no noise added.
 % 
 %  Outputs
 %   y       - x + noise
@@ -20,7 +20,7 @@ function [y, n, snr_hat] = add_noise(x, dsnr)
 % See also .
 
 % Copyright 2005-2017 Richard J. Cui. Created: Mon 03/02/2004  1:23:52.278 PM
-% $ Revision: 0.5 $  $ Wed 02/22/2017 11:29:13.394 AM $
+% $ Revision: 0.6 $  $Date: Sun 02/26/2017  2:32:36.421 PM $
 %
 % 3236 E Chandler Blvd Unit 2036
 % Phoenix, AZ 85048, USA
@@ -31,7 +31,11 @@ narginchk(1, 2);
 
 % add noise
 % ---------
-y = awgn(x, dsnr, 'measured');
+if dsnr == Inf
+    y = x;
+else
+    y = awgn(x, dsnr, 'measured');
+end % if
 n = y - x;
 
 % estimate SNR
