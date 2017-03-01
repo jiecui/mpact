@@ -39,37 +39,39 @@ err_mle  = get_serr(num_test, num_snr, rs, N, Q, P_hat, 'MLE');
 % =========================================================================
 para.nboot = 1000;
 para.BaseIndex = find(d_snr == Inf);
-e_mpem = err_m_sem(err_mpem, para); % find mean $ SEM of square-error
-e_mle = err_m_sem(err_mle, para);
+[e_mpem.Idx, e_mpem.Mean, e_mpem.CI] = get_robust_index(err_mpem, para); % robustness index of MPEM algorithm
+[e_mle.Idx, e_mle.Mean, e_mle.CI] = get_robust_index(err_mle, para); % robustness index of MLE algorithm
+
+% visualization
+f = @(s, e) errorbar(s(~(s == Inf)), e.Mean, e.Mean-e.CI(1, :), e.CI(2, :)-e.Mean);
+figure
+f(d_snr, e_mpem)
+hold on
+f(d_snr, e_mle)
+set(gca, 'YScale', 'log')
+legend('MPEM', 'MLE')
 
 end % function data_mse_analysis
 
 % =========================================================================
 % subroutines
 % =========================================================================
-function m_sem = err_m_sem(serr, para)
-% mean and sem of error
-
-nboot = para.nboot;
-rbi = get_robust_index(serr, para); % robustness index of MPEM algorithm
-m_sem = [mean(rbi)', std(rbi)'/sqrt(nboot)]; % [mean, sem]
-
-end % function
-
-function rb_idx = get_robust_index(err_mse, para)
+function [rb_idx, rb_m, rb_ci] = get_robust_index(err_mse, para)
 
 base_idx = para.BaseIndex;
 nboot = para.nboot;
 
 x = 1:size(err_mse, 2);
 E = err_mse(:, ~(x == base_idx));
-% B = err_mse(:, base_idx)*ones(1, size(E, 2));
+B = err_mse(:, base_idx)*ones(1, size(E, 2));
 
-err_idx = E;
+% err_idx = E;
 % err_idx = (E-B)./(E+B);
-% err_idx = (E-B)./B;
+err_idx = (E-B)./B; % relative error
 
 rb_idx = bootstrp(nboot, @(x) mean(x), err_idx); % get robutness index
+rb_m = mean(rb_idx); % average of mean
+rb_ci = bootci(nboot, {@(x) mean(x), err_idx}, 'type', 'bca'); % get confidence interval
 
 end % function
 

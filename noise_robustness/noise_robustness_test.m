@@ -30,7 +30,7 @@ Q = size(P, 1); % number of chiprlets to be estimated
 [snr_hat, tcost, P_hat] = noise_robust_test(s, Q, d_snr, num_test);
 
 % =========================================================================
-% data save
+% save data
 % =========================================================================
 save('noise_robust_data.mat', 'P', 's', 'd_snr', 'snr_hat', 'tcost', 'P_hat')
 
