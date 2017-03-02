@@ -4,7 +4,7 @@
 % as the signal is embedded in noise.
 % 
 % Syntax:
-%   sim_1_x_chirps
+%   sim2_x_chirps
 %
 % Input(s):
 %
@@ -13,7 +13,7 @@
 % Example:
 % 
 % Note:
-%   For strong noise (SNR < 0 dB), MLE is more likely to fail than EM.
+%   For strong noise (SNR <= 0 dB), MLE is more likely to fail than EM.
 %
 % See also .
 
@@ -50,7 +50,7 @@ ay_max = max(floor(abs(axlm(3:4)) + .5));
 ax_lmt = [axlm(1:2), [-1 1] * ay_max];
 axis(sh, ax_lmt)
 xlabel('Time (s)')
-title(sprintf('S_1 + S_2 + noise (SNR = %.2f dB)', signr));
+title(sprintf('S_1 + S_2 + noise (SNR = %.2f dB)', d_snr));
 % signal s1
 sh = subplot(411);
 plot(s1), grid on, axis(sh, ax_lmt), title('Up-chirp S_1');

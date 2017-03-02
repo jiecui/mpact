@@ -26,19 +26,34 @@
 % data analysis
 % =========================================================================
 load noise_robust_data.mat
-[e_mpem, e_mle] = data_mse_analysis(P, s, d_snr, snr_hat, P_hat);
+[rb_idx, rb_mean, rb_ci, stat] = data_mse_analysis(P, s, d_snr, snr_hat, P_hat);
 
 % =========================================================================
 % robustness indexes
 % =========================================================================
-f = @(s, e) errorbar(s(~(s == Inf)), e.Mean, e.Mean-e.CI(1, :), e.CI(2, :)-e.Mean);
+f = @(s, m, c) errorbar(s(~(s == Inf)), m, m-c(1, :), c(2, :)-m, 'o');
+
+x = d_snr(~(d_snr == Inf));
+v = rb_mean;
+xq = min(x):1:max(x);
+vq = interp1(x, v, xq, 'pchip'); % Shape-preserving piecewise cubic interpolation
+
 figure
-f(d_snr, e_mpem)
+eb = f(d_snr, rb_mean, rb_ci); % return errorbar object
 hold on
-f(d_snr, e_mle)
+plot(xq, vq)
 ax = axis(gca);
 xlim([ax(1)-5, ax(2)+5])
-set(gca, 'YScale', 'log')
-legend('MPEM', 'MLE')
+ylim([-.1 .4])
+plot(xlim, [0 0])
+legend(eb, 'Relative Rb')
+xlabel('Tested SNR (dB)')
+ylabel('Robustness Index')
+
+% =========================================================================
+% display significant test
+% =========================================================================
+cprintf('Keywords', 'Significant test at each SNR point:\n')
+disp(stat)
 
 % [EOF]
