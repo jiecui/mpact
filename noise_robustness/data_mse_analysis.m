@@ -1,4 +1,4 @@
-function [e_mpem, e_mle] = data_mse_analysis(P, s, d_snr, snr_hat, P_hat)
+function [rb_idx, rb_mean, rb_ci, stat] = data_mse_analysis(P, s, d_snr, snr_hat, P_hat)
 % DATA_MSE_ANALYSIS analysis of mean-square error E(\|s-\hat{s}\|^2)
 %
 % Syntax:
@@ -16,7 +16,7 @@ function [e_mpem, e_mle] = data_mse_analysis(P, s, d_snr, snr_hat, P_hat)
 % See also .
 
 % Copyright 2017 Richard J. Cui. Created: Mon 02/27/2017  2:15:49.215 PM
-% $Revision: 0.1 $  $Date: Tue 02/28/2017 11:41:58.340 AM $
+% $Revision: 0.3 $  $Date: Thu 03/02/2017 11:11:42.639 AM $
 %
 % 3236 E Chandler Blvd Unit 2036
 % Phoenix, AZ 85048, USA
@@ -38,40 +38,55 @@ err_mle  = get_serr(num_test, num_snr, rs, N, Q, P_hat, 'MLE');
 % statistics
 % =========================================================================
 para.nboot = 1000;
+para.nSNR = num_snr;
 para.BaseIndex = find(d_snr == Inf);
-[e_mpem.Idx, e_mpem.Mean, e_mpem.CI] = get_robust_index(err_mpem, para); % robustness index of MPEM algorithm
-[e_mle.Idx, e_mle.Mean, e_mle.CI] = get_robust_index(err_mle, para); % robustness index of MLE algorithm
+[rb_idx, rb_mean, rb_ci] = get_robust_index(err_mpem, err_mle, para); % robustness index of MPEM algorithm
 
-% visualization
-f = @(s, e) errorbar(s(~(s == Inf)), e.Mean, e.Mean-e.CI(1, :), e.CI(2, :)-e.Mean);
-figure
-f(d_snr, e_mpem)
-hold on
-f(d_snr, e_mle)
-set(gca, 'YScale', 'log')
-legend('MPEM', 'MLE')
+% ----------------------
+% significance test
+% ----------------------
+stat = sig_test(rb_idx);
 
 end % function data_mse_analysis
 
 % =========================================================================
 % subroutines
 % =========================================================================
-function [rb_idx, rb_m, rb_ci] = get_robust_index(err_mse, para)
+function stat = sig_test(idx)
+
+[M, N] = size(idx);
+h = zeros(1, N);
+p = zeros(1, N);
+for k = 1:N
+    [p(k), h(k)] = ranksum(idx(:, k), zeros(M, 1), 'tail', 'right');
+end % for
+stat = struct('h', h, 'p', p);
+
+end % function
+
+function z = bootstat(x, y)
+
+mx = mean(x);
+my = mean(y);
+
+z = (my-mx)./(my+mx);
+
+end % function
+
+function [rb_idx, rb_m, rb_ci] = get_robust_index(err_mpem, err_mle, para)
 
 base_idx = para.BaseIndex;
 nboot = para.nboot;
+nSNR = para.nSNR;
 
-x = 1:size(err_mse, 2);
-E = err_mse(:, ~(x == base_idx));
-B = err_mse(:, base_idx)*ones(1, size(E, 2));
+x = 1:nSNR;
+mpem = err_mpem(:, ~(x == base_idx));
+mle = err_mle(:,  ~(x == base_idx));
 
-% err_idx = E;
-% err_idx = (E-B)./(E+B);
-err_idx = (E-B)./B; % relative error
-
-rb_idx = bootstrp(nboot, @(x) mean(x), err_idx); % get robutness index
-rb_m = mean(rb_idx); % average of mean
-rb_ci = bootci(nboot, {@(x) mean(x), err_idx}, 'type', 'bca'); % get confidence interval
+rng(100) % for repeatness
+rb_idx = bootstrp(nboot, @bootstat, mpem, mle); % get robutness index
+rb_m = mean(rb_idx);
+rb_ci = bootci(nboot, {@bootstat, mpem, mle}, 'type', 'bca'); % get confidence interval
 
 end % function
 

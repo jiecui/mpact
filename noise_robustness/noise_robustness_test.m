@@ -20,7 +20,7 @@ s = make_chirplets(N, P); % the complex signal
 
 % test paras
 % ----------
-d_snr       = [-30:10:10, Inf]; % central values of desired SNR
+d_snr       = [-30:10:20, Inf]; % central values of desired SNR
 num_test    = 100; % number of test at each test point
 
 % =========================================================================
