@@ -1,7 +1,7 @@
 % SIM2_X_CHIRPS A simulation of up- and down- chirps decomposition
 %
-% This simulation compares the results of EM and MLE refinement algorithm
-% as the signal is embedded in noise.
+% This simulation compares the results of MPEM and MLE algorithm to
+% estimtate the signal embedded in noise.
 % 
 % Syntax:
 %   sim_1_x_chirps
@@ -13,12 +13,12 @@
 % Example:
 % 
 % Note:
-%   For strong noise (SNR < 0 dB), MLE is more likely to fail than EM.
+%   For strong noise, MLE is more likely to fail than MPEM.
 %
 % See also .
 
 % Copyright 2004-2017 Richard J. Cui. Created: Mon 09/27/2004  1:23:52.278 PM
-% $ Revision: 1.6 $  $ Date: Wed 02/22/2017 11:29:13.394 AM $
+% $ Revision: 1.7 $  $ Date: Thu 03/02/2017 12:46:01.586 PM $
 %
 % 3236 E Chandler Blvd Unit 2036
 % Phoenix, AZ 85048, USA
