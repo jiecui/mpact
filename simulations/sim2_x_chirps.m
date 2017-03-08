@@ -51,7 +51,7 @@ ay_max = max(floor(abs(axlm(3:4)) + .5));
 ax_lmt = [axlm(1:2), [-1 1] * ay_max];
 axis(sh, ax_lmt)
 xlabel('Time (s)')
-title(sprintf('S_1 + S_2 + noise (SNR = %.2f dB)', signr));
+title(sprintf('S_1 + S_2 + noise (SNR = %.2f dB)', d_snr));
 % signal s1
 sh = subplot(411);
 plot(s1), grid on, axis(sh, ax_lmt), title('Up-chirp S_1');
@@ -60,7 +60,7 @@ sh = subplot(412);
 plot(s2), grid on, axis(sh, ax_lmt), title('Down-chirp S_2');
 % s = s1 + s2
 sh = subplot(413);
-plot(s), grid on, axis(sh, ax_lmt), title('Synthesized signal');
+plot(s), grid on, axis(sh, ax_lmt), title('clean = S_1 + S_2');
 
 %% ========================================================================
 % perform mp adaptive chirplet decomposition
@@ -79,23 +79,28 @@ tests = hilbert(spn); % testing signal, complex
 % =========================================================================
 % compare original and recontructed signals
 % =========================================================================
+% t-f representation of clean signals
+% -----------------------------------
+P = [P1; P2];
+show_decomp(s, P, fs, 'Clean signal')
+
 % MPEM
 % -----
 p_mpem = table2array(P_mpem);
 fig_name = get_fig_name('ExpectMax');
-show_decomp(spn, p_mpem, fs, fig_name)
-comp_decomp(s, spn, p_mpem, fig_name)
+show_decomp(spn, p_mpem, fs, fig_name) % on t-f plane
+comp_decomp(s, spn, p_mpem, fig_name) % on time domain
 
 % MLE
 % ---
 p_mle = table2array(P_mle);
 fig_name = get_fig_name('MaxLikeliEst');
-show_decomp(spn, p_mle, fs, fig_name)
-comp_decomp(s, spn, p_mle, fig_name)
+show_decomp(spn, p_mle, fs, fig_name) % t-f plane
+comp_decomp(s, spn, p_mle, fig_name) % on time domain
 
 % compare square error
 % --------------------
-
+comp_sqerr(s, P_mpem, P_mle)
 
 % =========================================================================
 % subroutines
