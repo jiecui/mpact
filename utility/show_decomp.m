@@ -1,5 +1,5 @@
 function show_decomp(s, P, fs, fig_name)
-% SHOW_DECOMP Display the results of decomposition
+% SHOW_DECOMP Display the results of decomposition on t-f plane
 %
 % Syntax:
 %

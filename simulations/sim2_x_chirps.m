@@ -1,7 +1,7 @@
 % SIM2_X_CHIRPS A simulation of up- and down- chirps decomposition
 %
-% This simulation compares the results of EM and MLE refinement algorithm
-% as the signal is embedded in noise.
+% This simulation compares the results of MPEM and MLE algorithm to
+% estimtate the signal embedded in noise.
 % 
 % Syntax:
 %   sim2_x_chirps
@@ -13,12 +13,12 @@
 % Example:
 % 
 % Note:
-%   For strong noise (SNR <= 0 dB), MLE is more likely to fail than EM.
+%   For strong noise, MLE is more likely to fail than MPEM.
 %
 % See also .
 
 % Copyright 2004-2017 Richard J. Cui. Created: Mon 09/27/2004  1:23:52.278 PM
-% $ Revision: 1.6 $  $ Date: Wed 02/22/2017 11:29:13.394 AM $
+% $ Revision: 1.8 $  $ Date: Tue 03/07/2017 11:50:25.793 AM $
 %
 % 3236 E Chandler Blvd Unit 2036
 % Phoenix, AZ 85048, USA
@@ -32,10 +32,11 @@ d_snr = 0.0; % desired SNR
 % synthesize the simulated signal
 % -------------------------------
 N   = 100; % signal size
-t   = (0:N-1)'; % N seconds, sampling time = 1 sec
-s1  = chirp(t, 0, N, .5); % up-chirp: 0 -> 0.5 Hz
-s2  = flipud(s1); % down-chirp: 0.5 -> 0 Hz
-s   = s1 + s2; % synthesized signal
+P1 = [10*exp(1i*0), N/2+1, pi/2,  pi/N, N/3]; % up-chirplet 0 -> pi
+P2 = [10*exp(1i*0), N/2+1, pi/2, -pi/N, N/3]; % down-chirplet 0 -> -pi
+s1 = real(make_chirplets(N, P1)); % the synthesized signal
+s2 = real(make_chirplets(N, P2)); % the synthesized signal
+s = s1+s2;
 [spn, ns, signr] = add_noise(s, d_snr); % add noise to the signal (require communication toolbox)
 fprintf('Desired SNR = %.2f dB, estimated SNR = %.2f dB\n', d_snr, signr)
 
@@ -59,7 +60,7 @@ sh = subplot(412);
 plot(s2), grid on, axis(sh, ax_lmt), title('Down-chirp S_2');
 % s = s1 + s2
 sh = subplot(413);
-plot(s), grid on, axis(sh, ax_lmt), title('Synthesized signal');
+plot(s), grid on, axis(sh, ax_lmt), title('clean = S_1 + S_2');
 
 %% ========================================================================
 % perform mp adaptive chirplet decomposition
@@ -67,28 +68,39 @@ plot(s), grid on, axis(sh, ax_lmt), title('Synthesized signal');
 % Common parameters
 % -----------------
 Q   = 2; % number of atoms desired
-i0  = 1; % the first scale to roate the atoms
-D   = 5; % decomposition depth = the higest scale
-a   = 2; % the radix of scale
-M = 256; % resolution for Newton-Raphson refinement
-verbose = 'YES'; % show notes
-mnits   = 10; % max number of iteration for refinement
-level   = 2; % difficulty of MLE (recommanded = 2)
+fs  = 1;
 
 % decompose spn
 % -------------
-P_em    = mp_act_signal(spn, Q, M, D, i0, a, 'ExpectMax', verbose, mnits);
-P_mle   = mp_act_signal(spn, Q, M, D, i0, a, 'MaxLikeliEst', verbose, mnits, level);
+tests = hilbert(spn); % testing signal, complex
+[~, P_mpem] = test_mpem_act(Q, tests);
+[~, P_mle] = test_mle_act(Q, tests);
 
 % =========================================================================
 % compare original and recontructed signals
 % =========================================================================
-% EM
+% t-f representation of clean signals
+% -----------------------------------
+P = [P1; P2];
+show_decomp(s, P, fs, 'Clean signal')
+
+% MPEM
+% -----
+p_mpem = table2array(P_mpem);
 fig_name = get_fig_name('ExpectMax');
-comp_decomp(s, spn, P_em, fig_name)
+show_decomp(spn, p_mpem, fs, fig_name) % on t-f plane
+comp_decomp(s, spn, p_mpem, fig_name) % on time domain
+
 % MLE
+% ---
+p_mle = table2array(P_mle);
 fig_name = get_fig_name('MaxLikeliEst');
-comp_decomp(s, spn, P_mle, fig_name)
+show_decomp(spn, p_mle, fs, fig_name) % t-f plane
+comp_decomp(s, spn, p_mle, fig_name) % on time domain
+
+% compare square error
+% --------------------
+comp_sqerr(s, P_mpem, P_mle)
 
 % =========================================================================
 % subroutines
