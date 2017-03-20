@@ -67,7 +67,7 @@ hold off
 grid on
 legend([hmpem, hmle], {'MPEM', 'MLE'})
 xlabel('Time (s)')
-title 'Compare square error';
+title 'Compare squared error';
 
 end % function comp_decomp
 

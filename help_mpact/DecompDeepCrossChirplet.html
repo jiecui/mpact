@@ -1,0 +1,271 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Decompose Deep Crossed Chirplets</title><meta name="generator" content="MATLAB 9.1"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2017-03-19"><meta name="DC.source" content="DecompDeepCrossChirplet.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Decompose Deep Crossed Chirplets</h1><!--introduction--><p>This simulation compares the results of MPEM and MLE algorithm for the estimation of the components of a signal, consisting of an upward and a downward chirplet, embedded in noise. <a href="matlab:edit('DecompDeepCrossChirplet.m')">open</a></p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Create and display the simulated signal</a></li><li><a href="#10">Perform adaptive chirplet decomposition with MP</a></li><li><a href="#11">Compare the original and recontructed signals</a></li></ul></div><h2 id="1">Create and display the simulated signal</h2><p>First, let's synthesize the simulated signal, which consists of an upward chirplet <tt>s1</tt>, chirp-rate changing from 0 to <img src="DecompDeepCrossChirplet_eq12719111378361454579.png" alt="$\pi$">, and a downwoard chriplet <tt>s2</tt>, from <img src="DecompDeepCrossChirplet_eq12719111378361454579.png" alt="$\pi$"> to 0.</p><pre class="codeinput">N   = 100; <span class="comment">% signal size</span>
+P1 = [10*exp(1i*0), N/2+1, pi/2,  pi/N, N/3]; <span class="comment">% up-chirplet 0 -&gt; pi</span>
+P2 = [10*exp(1i*0), N/2+1, pi/2, -pi/N, N/3]; <span class="comment">% down-chirplet 0 -&gt; -pi</span>
+s1 = real(make_chirplets(N, P1)); <span class="comment">% the synthesized signal</span>
+s2 = real(make_chirplets(N, P2)); <span class="comment">% the synthesized signal</span>
+s = s1+s2;
+</pre><p>Then, we add white Gaussian noise at the desired <i>signal-to-noise</i> (SNR) level, <tt>d_snr</tt>, in dB. You can change <tt>d_snr</tt> for experiments.</p><pre class="codeinput">d_snr = 0.0; <span class="comment">% desired SNR</span>
+[spn, ns, signr] = add_noise(s, d_snr); <span class="comment">% add noise to the signal (require communication toolbox)</span>
+fprintf(<span class="string">'Desired SNR = %.2f dB, estimated SNR = %.2f dB\n'</span>, d_snr, signr)
+</pre><p>We now display the signal. Note that the noisy signal may be different from trial to trial.</p><pre class="codeinput">figure
+<span class="comment">% the simulated signal</span>
+sh = subplot(414);
+plot(spn), grid <span class="string">on</span>, axis <span class="string">tight</span>
+axlm = axis(sh);
+ay_max = max(floor(abs(axlm(3:4)) + .5));
+ax_lmt = [axlm(1:2), [-1 1] * ay_max];
+axis(sh, ax_lmt)
+xlabel(<span class="string">'Time (s)'</span>)
+title(sprintf(<span class="string">'S_1 + S_2 + noise (SNR = %.2f dB)'</span>, d_snr));
+
+<span class="comment">% signal s1</span>
+sh = subplot(411);
+plot(s1), grid <span class="string">on</span>, axis(sh, ax_lmt), title(<span class="string">'Up-chirp S_1'</span>);
+
+<span class="comment">% signal s2</span>
+sh = subplot(412);
+plot(s2), grid <span class="string">on</span>, axis(sh, ax_lmt), title(<span class="string">'Down-chirp S_2'</span>);
+
+<span class="comment">% s = s1 + s2</span>
+sh = subplot(413);
+plot(s), grid <span class="string">on</span>, axis(sh, ax_lmt), title(<span class="string">'clean = S_1 + S_2'</span>);
+</pre><p>Show the signal in time-domain.</p><p><img vspace="5" hspace="5" src="DecompDeepCrossChirplet_simsig.png" alt=""> </p><p>Show time-freqency distributions of the simulated signal in <i>short-time Fourier transform</i> (STFT), <i>Viger-Ville distribution</i> (WVD) and <i>adpative chirplet spectrum</i> (ACS)</p><pre class="codeinput">fs  = 1; <span class="comment">% normalized sampling frequency</span>
+P = [P1; P2];
+show_decomp(s, P, fs, <span class="string">'Clean signal'</span>)
+</pre><div><ul><li>Short-time Fourier transform of <b>clean</b> signal</li></ul></div><p><img vspace="5" hspace="5" src="DecompDeepCrossChirplet_stft.png" alt=""> </p><div><ul><li>Short-time Fourier transform of <b>noisy</b> signal</li></ul></div><p><img vspace="5" hspace="5" src="DecompDeepCrossChirplet_stft_noisy.png" alt=""> </p><div><ul><li>Vigner-Ville distribution of <b>clean</b> signal</li></ul></div><p><img vspace="5" hspace="5" src="DecompDeepCrossChirplet_wvd.png" alt=""> </p><div><ul><li>Adaptive chirplet spectrum of <b>clean</b> signal</li></ul></div><p><img vspace="5" hspace="5" src="DecompDeepCrossChirplet_acs.png" alt=""> </p><h2 id="10">Perform adaptive chirplet decomposition with MP</h2><p>Next we decompose the simulated signal with MPEM and MLE algorithms.</p><pre class="codeinput">tests = hilbert(spn); <span class="comment">% convert it into analytic signal</span>
+Q = 2; <span class="comment">% number of atoms desired</span>
+[~, P_mpem] = test_mpem_act(Q, tests); <span class="comment">% with MPEM algorithm</span>
+[~, P_mle] = test_mle_act(Q, tests); <span class="comment">% with MLE algorithm</span>
+</pre><h2 id="11">Compare the original and recontructed signals</h2><p>Finally, we compare the results from MPEM and MLE algorithms.</p><p>Results from MPEM algorithm</p><pre class="codeinput">p_mpem = table2array(P_mpem);
+fig_name = get_fig_name(<span class="string">'ExpectMax'</span>);
+show_decomp(spn, p_mpem, fs, fig_name) <span class="comment">% on t-f plane</span>
+comp_decomp(s, spn, p_mpem, fig_name) <span class="comment">% on time domain</span>
+</pre><div><ul><li>Comparison between clean and reconstructed signal (MPEM)</li></ul></div><p><img vspace="5" hspace="5" src="DecompDeepCrossChirplet_sig_mpem.png" alt=""> </p><div><ul><li>Adaptive chirplet spectrum of reconstruced signal (MPEM)</li></ul></div><p><img vspace="5" hspace="5" src="DecompDeepCrossChirplet_acs_mpem.png" alt=""> </p><p>Results from MLE algorithm</p><pre class="codeinput">p_mle = table2array(P_mle);
+fig_name = get_fig_name(<span class="string">'MaxLikeliEst'</span>);
+show_decomp(spn, p_mle, fs, fig_name) <span class="comment">% t-f plane</span>
+comp_decomp(s, spn, p_mle, fig_name) <span class="comment">% on time domain</span>
+</pre><div><ul><li>Comparison between clean and reconstructed signal (MLE)</li></ul></div><p><img vspace="5" hspace="5" src="DecompDeepCrossChirplet_sig_mle.png" alt=""> </p><div><ul><li>Adaptive chirplet spectrum of reconstruced signal (MLE)</li></ul></div><p><img vspace="5" hspace="5" src="DecompDeepCrossChirplet_acs_mle.png" alt=""> </p><p>Compare squared error between MPEM and MLE algrithms</p><pre class="codeinput">comp_sqerr(s, P_mpem, P_mle)
+</pre><p><img vspace="5" hspace="5" src="DecompDeepCrossChirplet_sqerr.png" alt=""> </p><p>We can see that the point-wise squared error of MLE algorithm is usually larger than that of MPEM algorithm.</p><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2016b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Decompose Deep Crossed Chirplets
+% This simulation compares the results of MPEM and MLE algorithm for the
+% estimation of the components of a signal, consisting of an upward and a
+% downward chirplet, embedded in noise. 
+% <matlab:edit('DecompDeepCrossChirplet.m') open> 
+
+%% Create and display the simulated signal
+% First, let's synthesize the simulated signal, which consists of an upward
+% chirplet |s1|, chirp-rate changing from 0 to $\pi$, and a downwoard
+% chriplet |s2|, from $\pi$ to 0.
+N   = 100; % signal size
+P1 = [10*exp(1i*0), N/2+1, pi/2,  pi/N, N/3]; % up-chirplet 0 -> pi
+P2 = [10*exp(1i*0), N/2+1, pi/2, -pi/N, N/3]; % down-chirplet 0 -> -pi
+s1 = real(make_chirplets(N, P1)); % the synthesized signal
+s2 = real(make_chirplets(N, P2)); % the synthesized signal
+s = s1+s2;
+
+%% 
+% Then, we add white Gaussian noise at the desired _signal-to-noise_ (SNR)
+% level, |d_snr|, in dB. You can change |d_snr| for experiments. 
+
+d_snr = 0.0; % desired SNR
+[spn, ns, signr] = add_noise(s, d_snr); % add noise to the signal (require communication toolbox)
+fprintf('Desired SNR = %.2f dB, estimated SNR = %.2f dB\n', d_snr, signr)
+
+%%
+% We now display the signal. Note that the noisy signal may be different
+% from trial to trial.
+figure
+% the simulated signal
+sh = subplot(414);
+plot(spn), grid on, axis tight
+axlm = axis(sh);
+ay_max = max(floor(abs(axlm(3:4)) + .5));
+ax_lmt = [axlm(1:2), [-1 1] * ay_max];
+axis(sh, ax_lmt)
+xlabel('Time (s)')
+title(sprintf('S_1 + S_2 + noise (SNR = %.2f dB)', d_snr));
+
+% signal s1
+sh = subplot(411);
+plot(s1), grid on, axis(sh, ax_lmt), title('Up-chirp S_1');
+
+% signal s2
+sh = subplot(412);
+plot(s2), grid on, axis(sh, ax_lmt), title('Down-chirp S_2');
+
+% s = s1 + s2
+sh = subplot(413);
+plot(s), grid on, axis(sh, ax_lmt), title('clean = S_1 + S_2');
+
+%% 
+% Show the signal in time-domain.
+% 
+% <<DecompDeepCrossChirplet_simsig.png>>
+% 
+
+%%
+% Show time-freqency distributions of the simulated signal in _short-time
+% Fourier transform_ (STFT), _Viger-Ville distribution_ (WVD) and _adpative
+% chirplet spectrum_ (ACS)
+fs  = 1; % normalized sampling frequency
+P = [P1; P2];
+show_decomp(s, P, fs, 'Clean signal')
+
+%% 
+% * Short-time Fourier transform of *clean* signal
+% 
+% <<DecompDeepCrossChirplet_stft.png>>
+% 
+
+%% 
+% * Short-time Fourier transform of *noisy* signal
+% 
+% <<DecompDeepCrossChirplet_stft_noisy.png>>
+% 
+
+%% 
+% * Vigner-Ville distribution of *clean* signal
+% 
+% <<DecompDeepCrossChirplet_wvd.png>>
+% 
+
+%% 
+% * Adaptive chirplet spectrum of *clean* signal
+% 
+% <<DecompDeepCrossChirplet_acs.png>>
+% 
+
+%% Perform adaptive chirplet decomposition with MP
+% Next we decompose the simulated signal with MPEM and MLE algorithms.
+
+tests = hilbert(spn); % convert it into analytic signal
+Q = 2; % number of atoms desired
+[~, P_mpem] = test_mpem_act(Q, tests); % with MPEM algorithm
+[~, P_mle] = test_mle_act(Q, tests); % with MLE algorithm
+
+%% Compare the original and recontructed signals
+% Finally, we compare the results from MPEM and MLE algorithms.
+
+%%
+% Results from MPEM algorithm
+p_mpem = table2array(P_mpem);
+fig_name = get_fig_name('ExpectMax');
+show_decomp(spn, p_mpem, fs, fig_name) % on t-f plane
+comp_decomp(s, spn, p_mpem, fig_name) % on time domain
+
+%%
+% * Comparison between clean and reconstructed signal (MPEM)
+% 
+% <<DecompDeepCrossChirplet_sig_mpem.png>>
+% 
+
+%%
+% * Adaptive chirplet spectrum of reconstruced signal (MPEM)
+% 
+% <<DecompDeepCrossChirplet_acs_mpem.png>>
+% 
+
+%%
+% Results from MLE algorithm
+p_mle = table2array(P_mle);
+fig_name = get_fig_name('MaxLikeliEst');
+show_decomp(spn, p_mle, fs, fig_name) % t-f plane
+comp_decomp(s, spn, p_mle, fig_name) % on time domain
+
+%%
+% * Comparison between clean and reconstructed signal (MLE)
+% 
+% <<DecompDeepCrossChirplet_sig_mle.png>>
+% 
+
+%%
+% * Adaptive chirplet spectrum of reconstruced signal (MLE)
+% 
+% <<DecompDeepCrossChirplet_acs_mle.png>>
+% 
+
+%%
+% Compare squared error between MPEM and MLE algrithms
+comp_sqerr(s, P_mpem, P_mle)
+
+%%
+% 
+% <<DecompDeepCrossChirplet_sqerr.png>>
+% 
+
+%%
+% We can see that the point-wise squared error of MLE algorithm is usually
+% larger than that of MPEM algorithm. 
+
+
+##### SOURCE END #####
+--></body></html>
