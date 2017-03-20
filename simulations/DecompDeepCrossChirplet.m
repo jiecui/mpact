@@ -17,7 +17,7 @@ s = s1+s2;
 
 %% 
 % Then, we add white Gaussian noise at the desired _signal-to-noise_ (SNR)
-% level, |d_snr|, in dB. You can change |d_snr| for experiments. 
+% level, |d_snr|, in dB. *You can change |d_snr| for your experiments*. 
 
 d_snr = 0.0; % desired SNR
 [spn, ns, signr] = add_noise(s, d_snr); % add noise to the signal (require communication toolbox)

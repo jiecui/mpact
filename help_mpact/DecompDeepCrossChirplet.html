@@ -6,7 +6,7 @@
    <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
-      --><title>Decompose Deep Crossed Chirplets</title><meta name="generator" content="MATLAB 9.1"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2017-03-19"><meta name="DC.source" content="DecompDeepCrossChirplet.m"><style type="text/css">
+      --><title>Decompose Deep Crossed Chirplets</title><meta name="generator" content="MATLAB 9.1"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2017-03-20"><meta name="DC.source" content="DecompDeepCrossChirplet.m"><style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
 
 html { min-height:100%; margin-bottom:1px; }
@@ -66,13 +66,13 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
 
 
 
-  </style></head><body><div class="content"><h1>Decompose Deep Crossed Chirplets</h1><!--introduction--><p>This simulation compares the results of MPEM and MLE algorithm for the estimation of the components of a signal, consisting of an upward and a downward chirplet, embedded in noise. <a href="matlab:edit('DecompDeepCrossChirplet.m')">open</a></p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Create and display the simulated signal</a></li><li><a href="#10">Perform adaptive chirplet decomposition with MP</a></li><li><a href="#11">Compare the original and recontructed signals</a></li></ul></div><h2 id="1">Create and display the simulated signal</h2><p>First, let's synthesize the simulated signal, which consists of an upward chirplet <tt>s1</tt>, chirp-rate changing from 0 to <img src="DecompDeepCrossChirplet_eq12719111378361454579.png" alt="$\pi$">, and a downwoard chriplet <tt>s2</tt>, from <img src="DecompDeepCrossChirplet_eq12719111378361454579.png" alt="$\pi$"> to 0.</p><pre class="codeinput">N   = 100; <span class="comment">% signal size</span>
+  </style></head><body><div class="content"><h1>Decompose Deep Crossed Chirplets</h1><!--introduction--><p>This simulation compares the results of MPEM and MLE algorithm for the estimation of the components of a signal, consisting of an upward and a downward chirplet, embedded in noise. <a href="matlab:edit('DecompDeepCrossChirplet.m')">open</a></p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Create and display the simulated signal</a></li><li><a href="#10">Perform adaptive chirplet decomposition with MP</a></li><li><a href="#11">Compare the original and recontructed signals</a></li></ul></div><h2 id="1">Create and display the simulated signal</h2><p>First, let's synthesize the simulated signal, which consists of an upward chirplet <tt>s1</tt>, chirp-rate changing from 0 to <img src="DecompDeepCrossChirplet_eq12719111378361454579.png" alt="$\pi$" style="width:4px;height:3px;">, and a downwoard chriplet <tt>s2</tt>, from <img src="DecompDeepCrossChirplet_eq12719111378361454579.png" alt="$\pi$" style="width:4px;height:3px;"> to 0.</p><pre class="codeinput">N   = 100; <span class="comment">% signal size</span>
 P1 = [10*exp(1i*0), N/2+1, pi/2,  pi/N, N/3]; <span class="comment">% up-chirplet 0 -&gt; pi</span>
 P2 = [10*exp(1i*0), N/2+1, pi/2, -pi/N, N/3]; <span class="comment">% down-chirplet 0 -&gt; -pi</span>
 s1 = real(make_chirplets(N, P1)); <span class="comment">% the synthesized signal</span>
 s2 = real(make_chirplets(N, P2)); <span class="comment">% the synthesized signal</span>
 s = s1+s2;
-</pre><p>Then, we add white Gaussian noise at the desired <i>signal-to-noise</i> (SNR) level, <tt>d_snr</tt>, in dB. You can change <tt>d_snr</tt> for experiments.</p><pre class="codeinput">d_snr = 0.0; <span class="comment">% desired SNR</span>
+</pre><p>Then, we add white Gaussian noise at the desired <i>signal-to-noise</i> (SNR) level, <tt>d_snr</tt>, in dB. <b>You can change <tt>d_snr</tt> for your experiments</b>.</p><pre class="codeinput">d_snr = 0.0; <span class="comment">% desired SNR</span>
 [spn, ns, signr] = add_noise(s, d_snr); <span class="comment">% add noise to the signal (require communication toolbox)</span>
 fprintf(<span class="string">'Desired SNR = %.2f dB, estimated SNR = %.2f dB\n'</span>, d_snr, signr)
 </pre><p>We now display the signal. Note that the noisy signal may be different from trial to trial.</p><pre class="codeinput">figure
@@ -134,7 +134,7 @@ s = s1+s2;
 
 %% 
 % Then, we add white Gaussian noise at the desired _signal-to-noise_ (SNR)
-% level, |d_snr|, in dB. You can change |d_snr| for experiments. 
+% level, |d_snr|, in dB. *You can change |d_snr| for your experiments*. 
 
 d_snr = 0.0; % desired SNR
 [spn, ns, signr] = add_noise(s, d_snr); % add noise to the signal (require communication toolbox)

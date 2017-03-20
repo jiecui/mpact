@@ -1,0 +1,294 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Multi-component Chirplet Decomposition</title><meta name="generator" content="MATLAB 9.1"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2017-03-20"><meta name="DC.source" content="MultiDecompChirplet.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Multi-component Chirplet Decomposition</h1><!--introduction--><p>This simulation demonstrates the multi-component decomposition with MPEM algorithm. Ths simulation signals are proposed in Durka and Blinowska 1995 and Cui and Wang 2996.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Construct and display the signals</a></li><li><a href="#12">Perform adaptive chirplet decomposition with MP</a></li><li><a href="#15">References</a></li></ul></div><h2 id="1">Construct and display the signals</h2><p>The simulated signal consists of four major components, i.e. Wave I-IV.</p><p>First, let's set the signal length and sampling frequency of the signal.</p><pre class="codeinput">T = 512;        <span class="comment">% the signal duration</span>
+fs = 1;         <span class="comment">% sampling frequency</span>
+</pre><div><ul><li>Wave I consists of a sine (A), a sawtooth (B) and a Gabor(C) waveform.</li></ul></div><pre class="codeinput">waveI = zeros(1,T);
+
+<span class="comment">% component A</span>
+dt_a = 46; <span class="comment">% even please, length of component A</span>
+tc_a = 90; <span class="comment">% time-center of component A</span>
+fc_a = 1/dt_a; <span class="comment">% frequency-center of A</span>
+s_a = -sin(2*pi*fc_a*(0:dt_a-1)/fs); <span class="comment">% signal A</span>
+
+<span class="comment">% component B, use the same as component A</span>
+tc_b = 422;
+s_b1 = -(1/2 * sawtooth(2*pi*2*fc_a*(0:dt_a/2-1)/fs, 1/2) + 1/2);
+s_b2 = -s_b1;
+s_b = [s_b1,s_b2]; <span class="comment">% signal B</span>
+
+<span class="comment">% component C</span>
+dt_c = 28; <span class="comment">% length of C</span>
+fc_c = 0.4; <span class="comment">% frequency center of C</span>
+tc_c = 256; <span class="comment">% time center of C</span>
+s_c = gabor1d(T, fs, dt_c, fc_c, tc_c, 1, 0); <span class="comment">% signal C</span>
+
+<span class="comment">% construct Wave I</span>
+waveI(round(tc_a-dt_a/2):round(tc_a-dt_a/2)+dt_a-1) = s_a;
+waveI(round(tc_b-dt_a/2):round(tc_b-dt_a/2)+dt_a-1) = s_b;
+waveI = waveI + s_c;
+</pre><div><ul><li>Wave II is a Gabor waveform (D).</li></ul></div><pre class="codeinput">dt_d = 2 * dt_c; <span class="comment">% length of D</span>
+fc_d = 2 * fc_c / 3; <span class="comment">% frequency center of D</span>
+tc_d = 256; <span class="comment">% time center of D</span>
+s_d = gabor1d(T, fs, dt_d, fc_d, tc_d, 1, 0);
+waveII = s_d;
+</pre><div><ul><li>Wave III consists of a pulse (E) and a sinusoidal (F) waveform.</li></ul></div><pre class="codeinput">tc_e = 128; <span class="comment">% component E</span>
+s_e = gabor1d(T, fs, 0, 0, tc_e, 2, 0); <span class="comment">% the pulse</span>
+
+fc_f = .35; <span class="comment">% component F</span>
+A_f  = .2;
+s_f  = A_f * sin(2*pi*fc_f * (0:T*fs-1)/fs);
+
+<span class="comment">% construct Wave III</span>
+waveIII = s_e + s_f;
+</pre><div><ul><li>Wave IV is a upward chirplet (G).</li></ul></div><pre class="codeinput">A_cp    = 6; <span class="comment">% amplitude, total energy of the chirplet</span>
+tc_cp   = 350;  <span class="comment">% time center</span>
+fc_cp   = .2 * 2 * pi / fs; <span class="comment">% freqency center, unit rad</span>
+cr      = pi/T; <span class="comment">% chirp rate</span>
+dt_cp   = 70;                <span class="comment">% size of the chriplet</span>
+P   = [A_cp, tc_cp, fc_cp, cr, dt_cp];
+cp  = make_chirplets(T, P);    <span class="comment">% chirplets out is a complex column vector</span>
+waveIV = real(cp)';
+</pre><p>Finally, we add all the components together.</p><pre class="codeinput">chirpsim = waveI+waveII+waveIII+waveIV;
+</pre><p>Wave I, II and III are presented in Durka and Blinowska 1995.</p><pre class="codeinput">durkas = waveI + waveII + waveIII;
+figure(<span class="string">'Name'</span>, <span class="string">'Durak and Blinowska'</span>)
+
+subplot(211), plot(durkas), axis([0, T*fs-1, -2.5, 2.5]);
+title(<span class="string">'Durka''s signal without chirp'</span>);
+
+subplot(212), plot(chirpsim), axis([0, T*fs-1, -2.5, 2.5]);
+title(<span class="string">'Composite signal with chirp component'</span>);
+</pre><p><img vspace="5" hspace="5" src="MultiDecompChirplet_durka.png" alt=""> </p><p>The waveforms of the individual components of the signal are shown as follows.</p><pre class="codeinput">figure(<span class="string">'Name'</span>, <span class="string">'The simulated signal'</span>)
+subplot(414), plot(waveI), axis <span class="string">tight</span>;
+ylabel(<span class="string">'waveI=A+B+C'</span>)
+
+subplot(413), plot(waveII), axis <span class="string">tight</span>;
+ylabel(<span class="string">'waveII=D'</span>)
+
+subplot(412), plot(waveIII), axis <span class="string">tight</span>;
+ylabel(<span class="string">'waveIII=E+F'</span>)
+
+subplot(411), plot(waveIV), axis <span class="string">tight</span>;
+ylabel(<span class="string">'waveIV=G'</span>)
+</pre><p><img vspace="5" hspace="5" src="MultiDecompChirplet_sim.png" alt=""> </p><h2 id="12">Perform adaptive chirplet decomposition with MP</h2><p>Set the parameters.</p><pre class="codeinput">Q   = 7; <span class="comment">% number of atoms desired</span>
+i0  = 1; <span class="comment">% the first scale to roate the atoms</span>
+D   = 5; <span class="comment">% decomposition depth = the higest scale</span>
+a   = 2; <span class="comment">% the radix of scale</span>
+M   = T; <span class="comment">% resolution for Newton-Raphson refinement</span>
+verbose = <span class="string">'Yes'</span>; <span class="comment">% show notes</span>
+mnits   = 5; <span class="comment">% max number of iteration for refinement</span>
+</pre><p><b>estimation with MPEM</b></p><pre class="codeinput">P = mp_act_signal(chirpsim, Q, M, D, i0, a, <span class="string">'ExpectMax'</span>, verbose, mnits);
+</pre><p>Compare the short-time Fourier transform of the simulated signal and the adaptive chirplet spectrum of the esimtated signal components.</p><p><img vspace="5" hspace="5" src="MultiDecompChirplet_sim_stft.png" alt=""> </p><p><img vspace="5" hspace="5" src="MultiDecompChirplet_sim_acs.png" alt=""> </p><h2 id="15">References</h2><div><ol><li>M. Akay and IEEE Engineering in Medicine and Biology Society,   Time-frequency and wavelets in biomedical signal processing, <i>New York:   IEEE Press</i>, 1998. pp. 305-406</li><li>P. J. Durka and K. J. Blinowska, "Analysis of EEG transients by means   of matching pursuit," <i>Ann Biomed Eng</i>, vol. 23, no. 5, pp. 608-611,   Sept.1995.</li><li>J. Cui and W. Wong, "The adaptive chirplet transform and visual evoked   potentials," <i>IEEE Transactions on Biomedical Engineering</i>, vol. 53, pp.   1378-1384, Jul 2006.</li></ol></div><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2016b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Multi-component Chirplet Decomposition
+% This simulation demonstrates the multi-component decomposition with MPEM
+% algorithm. Ths simulation signals are proposed in Durka and Blinowska
+% 1995 and Cui and Wang 2996.
+
+%% Construct and display the signals
+% The simulated signal consists of four major components, i.e. Wave I-IV. 
+
+%%
+% First, let's set the signal length and sampling frequency of the signal.
+T = 512;        % the signal duration
+fs = 1;         % sampling frequency
+
+%%
+% * Wave I consists of a sine (A), a sawtooth (B) and a Gabor(C) waveform.
+waveI = zeros(1,T);
+
+% component A
+dt_a = 46; % even please, length of component A
+tc_a = 90; % time-center of component A
+fc_a = 1/dt_a; % frequency-center of A
+s_a = -sin(2*pi*fc_a*(0:dt_a-1)/fs); % signal A
+
+% component B, use the same as component A
+tc_b = 422;
+s_b1 = -(1/2 * sawtooth(2*pi*2*fc_a*(0:dt_a/2-1)/fs, 1/2) + 1/2);    
+s_b2 = -s_b1;
+s_b = [s_b1,s_b2]; % signal B
+
+% component C
+dt_c = 28; % length of C
+fc_c = 0.4; % frequency center of C
+tc_c = 256; % time center of C
+s_c = gabor1d(T, fs, dt_c, fc_c, tc_c, 1, 0); % signal C
+
+% construct Wave I
+waveI(round(tc_a-dt_a/2):round(tc_a-dt_a/2)+dt_a-1) = s_a;
+waveI(round(tc_b-dt_a/2):round(tc_b-dt_a/2)+dt_a-1) = s_b;
+waveI = waveI + s_c;
+
+%%
+% * Wave II is a Gabor waveform (D).
+dt_d = 2 * dt_c; % length of D
+fc_d = 2 * fc_c / 3; % frequency center of D
+tc_d = 256; % time center of D
+s_d = gabor1d(T, fs, dt_d, fc_d, tc_d, 1, 0);
+waveII = s_d;
+
+%%
+% * Wave III consists of a pulse (E) and a sinusoidal (F) waveform.
+tc_e = 128; % component E
+s_e = gabor1d(T, fs, 0, 0, tc_e, 2, 0); % the pulse
+
+fc_f = .35; % component F
+A_f  = .2;
+s_f  = A_f * sin(2*pi*fc_f * (0:T*fs-1)/fs);
+
+% construct Wave III
+waveIII = s_e + s_f;
+
+%%
+% * Wave IV is a upward chirplet (G).
+A_cp    = 6; % amplitude, total energy of the chirplet
+tc_cp   = 350;  % time center
+fc_cp   = .2 * 2 * pi / fs; % freqency center, unit rad
+cr      = pi/T; % chirp rate
+dt_cp   = 70;                % size of the chriplet
+P   = [A_cp, tc_cp, fc_cp, cr, dt_cp];
+cp  = make_chirplets(T, P);    % chirplets out is a complex column vector
+waveIV = real(cp)';
+
+%%
+% Finally, we add all the components together. 
+chirpsim = waveI+waveII+waveIII+waveIV;
+
+%%
+% Wave I, II and III are presented in Durka and Blinowska 1995.
+durkas = waveI + waveII + waveIII;
+figure('Name', 'Durak and Blinowska')
+
+subplot(211), plot(durkas), axis([0, T*fs-1, -2.5, 2.5]);
+title('Durka''s signal without chirp');
+
+subplot(212), plot(chirpsim), axis([0, T*fs-1, -2.5, 2.5]);
+title('Composite signal with chirp component');
+
+%%
+% 
+% <<MultiDecompChirplet_durka.png>>
+% 
+
+%%
+% The waveforms of the individual components of the signal are shown as
+% follows.
+figure('Name', 'The simulated signal')
+subplot(414), plot(waveI), axis tight;
+ylabel('waveI=A+B+C')
+
+subplot(413), plot(waveII), axis tight;
+ylabel('waveII=D')
+
+subplot(412), plot(waveIII), axis tight;
+ylabel('waveIII=E+F')
+
+subplot(411), plot(waveIV), axis tight;
+ylabel('waveIV=G')
+
+%%
+% 
+% <<MultiDecompChirplet_sim.png>>
+% 
+
+%% Perform adaptive chirplet decomposition with MP
+% Set the parameters.
+Q   = 7; % number of atoms desired
+i0  = 1; % the first scale to roate the atoms
+D   = 5; % decomposition depth = the higest scale
+a   = 2; % the radix of scale
+M   = T; % resolution for Newton-Raphson refinement
+verbose = 'Yes'; % show notes
+mnits   = 5; % max number of iteration for refinement
+
+%%
+% *estimation with MPEM*
+P = mp_act_signal(chirpsim, Q, M, D, i0, a, 'ExpectMax', verbose, mnits);
+
+%%
+% Compare the short-time Fourier transform of the simulated signal and the
+% adaptive chirplet spectrum of the esimtated signal components.
+% 
+% <<MultiDecompChirplet_sim_stft.png>>
+% 
+% <<MultiDecompChirplet_sim_acs.png>>
+% 
+
+%% References
+% # M. Akay and IEEE Engineering in Medicine and Biology Society,
+%   Time-frequency and wavelets in biomedical signal processing, _New York:
+%   IEEE Press_, 1998. pp. 305-406
+% # P. J. Durka and K. J. Blinowska, "Analysis of EEG transients by means
+%   of matching pursuit," _Ann Biomed Eng_, vol. 23, no. 5, pp. 608-611,
+%   Sept.1995. 
+% # J. Cui and W. Wong, "The adaptive chirplet transform and visual evoked
+%   potentials," _IEEE Transactions on Biomedical Engineering_, vol. 53, pp.
+%   1378-1384, Jul 2006.
+##### SOURCE END #####
+--></body></html>

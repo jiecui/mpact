@@ -40,7 +40,7 @@ function [P, res] = mp_adapt_chirplets(x, Q, varargin)
 % See also make_chirplets.
 
 % Copyright 2005-2017 Richard J. Cui. Created: Tue 02/22/2005 2:46:52.278 PM
-% $ Revision: 1.1 $  $ Date:Wed 02/22/2017  4:38:07.949 PM $
+% $ Revision: 1.2 $  $ Date: Mon 03/20/2017 12:25:17.545 PM $
 %
 % 3236 E Chandler Blvd Unit 2036
 % Phoenix, AZ 85048, USA
@@ -87,7 +87,7 @@ while done == false
     if strcmp(verbose, 'yes') || strcmp(verbose, 'vv')
         cprintf('Keywords', '\n*****************************************');
         cprintf('Keywords', '\nSingle chirplet estimation - MP algorithm');
-        cprintf('Keywords', '\n*****************************************');
+        cprintf('Keywords', '\n*****************************************\n');
     end % if
     
     % esimtate the i-th chirplet
@@ -95,7 +95,7 @@ while done == false
     P = cat(1, P, P_i);
     
     if strcmp(verbose, 'yes') || strcmp(verbose, 'vv')
-        cprintf('Keywords', '\nEstimated chirplet %d:', i);
+        cprintf('Keywords', 'Estimated chirplet %d:', i);
         cprintf('Keywords', ...
             '\n|A| = %-6.2f, Tc = %-6.2f, Fc = %-4.2f, Cr = %-7.4f, Dt = %-6.2f\n',...
             abs(P_i(1)), P_i(2), P_i(3), P_i(4), P_i(5));
@@ -109,7 +109,7 @@ while done == false
                 % show roadmaps
                 cprintf('Keywords', '\n********************************************');
                 cprintf('Keywords', '\nMultiple chirplets refinement - EM algorithm');
-                cprintf('Keywords', '\n********************************************');
+                cprintf('Keywords', '\n********************************************\n');
                 if strcmp(verbose, 'vv')
                     fprintf(sprintf('\nEM iterations(max = %d): ', mnits)); 
                 end
@@ -120,7 +120,7 @@ while done == false
                 % show roadmaps
                 cprintf('Keywords', '\n*********************************************');
                 cprintf('Keywords', '\nMultiple chirplets refinement - MLE algorithm');
-                cprintf('Keywords', '\n*********************************************');
+                cprintf('Keywords', '\n*********************************************\n');
                 if strcmp(verbose, 'vv')
                     fprintf(sprintf('\nMLE iterations(max = %d): ', mnits)); 
                 end
@@ -130,7 +130,7 @@ while done == false
     
     % show details if asked for...
     if (strcmp(verbose, 'yes') || strcmp(verbose, 'vv')) && i > 1
-        cprintf('Keywords', '\n--------------');
+        cprintf('Keywords', '--------------');
         cprintf('Keywords', '\n Results');
         cprintf('Keywords', '\n--------------');
         cprintf('Keywords', '\nNo.\t%s\t%s\t%s\t%s\t%s', ...

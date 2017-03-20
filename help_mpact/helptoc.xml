@@ -25,8 +25,8 @@
             <tocitem target="DecompDeepCrossChirplet.html">
                 Decompose Deep Crossed Chirplets
             </tocitem>
-            <tocitem target="mytbx_features_example.html">
-                Multi-component Chirplet Analysis
+            <tocitem target="MultiDecompChirplet.html">
+                Multi-component Chirplet Decomposition
             </tocitem>
         </tocitem>
         
