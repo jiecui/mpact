@@ -42,9 +42,9 @@
         </tocitem>
         
         <!-- Optional link or links to your or other Web sites -->
-        <tocitem target="http://www.mathworks.com" 
+        <tocitem target="https://github.com/jiecui/mpact" 
                  image="$toolbox/matlab/icons/webicon.gif">
-            MyToolbox Web Site (Example only: goes to mathworks.com)
+            Code on GitHub
         </tocitem>
     </tocitem>
 </toc>
