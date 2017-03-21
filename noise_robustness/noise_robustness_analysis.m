@@ -1,7 +1,8 @@
 %% Noise Robustness Analysis
 % Perform analysis of noise robustness of the algorithms using data from
 % <matlab:web('noise_robustness_exp.html','-helpbrowser') Noise Robustness
-% Experiments>, and display the results.
+% Experiments>, and display the results. See the 
+% <matlab:edit('noise_robustness_analysis.m') code>. 
 
 %% Robustness Indexes Analysis
 % The data for the analysis are in _noise_robust_data.mat_.  As an example

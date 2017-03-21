@@ -1,6 +1,7 @@
 %% Noise Robustness Experiments
 % Perform multi-component estimation of noisy signals using MPEM and MLE
-% algorithms, and save the raw data for subsequent analysis.
+% algorithms, and save the raw data for subsequent analysis. See the 
+% <matlab:edit('noise_robustness_exp.m') code>. 
 
 %% Set parameters
 % First, set the parameters of chirplet signals. The signal used in testing

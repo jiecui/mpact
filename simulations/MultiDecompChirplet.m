@@ -1,7 +1,8 @@
 %% Multi-component Chirplet Decomposition
 % This simulation demonstrates the multi-component decomposition with MPEM
 % algorithm. Ths simulation signals are proposed in Durka and Blinowska
-% 1995 and Cui and Wang 2996.
+% 1995 and Cui and Wang 2996. See the 
+% <matlab:edit('MultiDecompChirplet.m') code>. 
 
 %% Construct and display the signals
 % The simulated signal consists of four major components, i.e. Wave I-IV. 
