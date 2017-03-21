@@ -66,7 +66,7 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
 
 
 
-  </style></head><body><div class="content"><h1>Decompose Deep Crossed Chirplets</h1><!--introduction--><p>This simulation compares the results of MPEM and MLE algorithm for the estimation of the components of a signal, consisting of an upward and a downward chirplet, embedded in noise. <a href="matlab:edit('DecompDeepCrossChirplet.m')">open</a></p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Create and display the simulated signal</a></li><li><a href="#10">Perform adaptive chirplet decomposition with MP</a></li><li><a href="#11">Compare the original and recontructed signals</a></li></ul></div><h2 id="1">Create and display the simulated signal</h2><p>First, let's synthesize the simulated signal, which consists of an upward chirplet <tt>s1</tt>, chirp-rate changing from 0 to <img src="DecompDeepCrossChirplet_eq12719111378361454579.png" alt="$\pi$" style="width:4px;height:3px;">, and a downwoard chriplet <tt>s2</tt>, from <img src="DecompDeepCrossChirplet_eq12719111378361454579.png" alt="$\pi$" style="width:4px;height:3px;"> to 0.</p><pre class="codeinput">N   = 100; <span class="comment">% signal size</span>
+  </style></head><body><div class="content"><h1>Decompose Deep Crossed Chirplets</h1><!--introduction--><p>This simulation compares the results of MPEM and MLE algorithm for the estimation of the components of a signal, consisting of an upward and a downward chirplet, embedded in noise. See the <a href="matlab:edit('DecompDeepCrossChirplet.m')">code</a>.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Create and display the simulated signal</a></li><li><a href="#10">Perform adaptive chirplet decomposition with MP</a></li><li><a href="#11">Compare the original and recontructed signals</a></li></ul></div><h2 id="1">Create and display the simulated signal</h2><p>First, let's synthesize the simulated signal, which consists of an upward chirplet <tt>s1</tt>, chirp-rate changing from 0 to <img src="DecompDeepCrossChirplet_eq12719111378361454579.png" alt="$\pi$" style="width:4px;height:3px;">, and a downwoard chriplet <tt>s2</tt>, from <img src="DecompDeepCrossChirplet_eq12719111378361454579.png" alt="$\pi$" style="width:4px;height:3px;"> to 0.</p><pre class="codeinput">N   = 100; <span class="comment">% signal size</span>
 P1 = [10*exp(1i*0), N/2+1, pi/2,  pi/N, N/3]; <span class="comment">% up-chirplet 0 -&gt; pi</span>
 P2 = [10*exp(1i*0), N/2+1, pi/2, -pi/N, N/3]; <span class="comment">% down-chirplet 0 -&gt; -pi</span>
 s1 = real(make_chirplets(N, P1)); <span class="comment">% the synthesized signal</span>
@@ -118,8 +118,8 @@ comp_decomp(s, spn, p_mle, fig_name) <span class="comment">% on time domain</spa
 %% Decompose Deep Crossed Chirplets
 % This simulation compares the results of MPEM and MLE algorithm for the
 % estimation of the components of a signal, consisting of an upward and a
-% downward chirplet, embedded in noise. 
-% <matlab:edit('DecompDeepCrossChirplet.m') open> 
+% downward chirplet, embedded in noise. See the 
+% <matlab:edit('DecompDeepCrossChirplet.m') code>. 
 
 %% Create and display the simulated signal
 % First, let's synthesize the simulated signal, which consists of an upward

@@ -1,0 +1,147 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Noise Robustness Analysis</title><meta name="generator" content="MATLAB 9.1"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2017-03-20"><meta name="DC.source" content="noise_robustness_analysis.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Noise Robustness Analysis</h1><!--introduction--><p>Perform analysis of noise robustness of the algorithms using data from <a href="matlab:web('noise_robustness_exp.html','-helpbrowser')">Noise Robustness Experiments</a>, and display the results.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Robustness Indexes Analysis</a></li><li><a href="#3">Show Results</a></li></ul></div><h2 id="1">Robustness Indexes Analysis</h2><p>The data for the analysis are in <i>noise_robust_data.mat</i>.  As an example of the analysis, load the data in <i>noise_robust_data_example.mat</i>.  The relative noise robustness of the algorithms is indicated by the <i>Robustness Index</i> (RI),</p><p><img src="noise_robustness_analysis_eq17330039651224241804.png" alt="$$I = \frac{E_l-E_p}{E_l+E_p},$$" style="width:62px;height:26px;"></p><p>where <img src="noise_robustness_analysis_eq14017910998944930217.png" alt="$E_l$" style="width:10px;height:10px;"> is the mean squared error (MSE) of MLE algorithm and <img src="noise_robustness_analysis_eq15858340530470344199.png" alt="$E_p$" style="width:12px;height:11px;"> the MSE of MPEM algorithm. Wilcoxon Rank Sum test is also conducted to test the null hypothesis that RI is not signficiantly larger than zero.</p><pre class="codeinput">load <span class="string">noise_robust_data_example.mat</span>
+[rb_idx, rb_mean, rb_ci, stat] = data_mse_analysis(P, s, d_snr, snr_hat, P_hat);
+</pre><p>RIs between the testing SNR points are indicated by the smoothed curve.</p><pre class="codeinput">x = d_snr(~(d_snr == Inf));
+v = rb_mean;
+xq = min(x):1:max(x);
+vq = interp1(x, v, xq, <span class="string">'pchip'</span>); <span class="comment">% Shape-preserving piecewise cubic interpolation</span>
+</pre><h2 id="3">Show Results</h2><p>Display RIs as a function of testing SNR. The error bar indicates 95% confidence interval.  Both the mean and the confidence interval of RIs are estimated with <a href="matlab:doc('bootstrp')">bootsrp</a> resamping method.</p><pre class="codeinput">f = @(s, m, c) errorbar(s(~(s == Inf)), m, m-c(1, :), c(2, :)-m, <span class="string">'o'</span>);
+
+figure
+eb = f(d_snr, rb_mean, rb_ci); <span class="comment">% return errorbar object</span>
+hold <span class="string">on</span>
+plot(xq, vq)
+ax = axis(gca);
+xlim([ax(1)-5, ax(2)+5])
+ylim([-.1 .4])
+plot(xlim, [0 0])
+legend(eb, <span class="string">'RI'</span>)
+xlabel(<span class="string">'Tested SNR (dB)'</span>)
+ylabel(<span class="string">'Robustness Index'</span>)
+</pre><p><img vspace="5" hspace="5" src="noise_robustness_analysis_ri.png" alt=""> </p><p>Display the results of Wilcoxon Rank Sum test</p><pre class="codeinput">cprintf(<span class="string">'Keywords'</span>, <span class="string">'Significant test at each SNR point:\n'</span>)
+disp(stat)
+</pre><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2016b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Noise Robustness Analysis
+% Perform analysis of noise robustness of the algorithms using data from
+% <matlab:web('noise_robustness_exp.html','-helpbrowser') Noise Robustness
+% Experiments>, and display the results.
+
+%% Robustness Indexes Analysis
+% The data for the analysis are in _noise_robust_data.mat_.  As an example
+% of the analysis, load the data in _noise_robust_data_example.mat_.  The
+% relative noise robustness of the algorithms is indicated by the
+% _Robustness Index_ (RI),
+%
+% $$I = \frac{E_l-E_p}{E_l+E_p},$$
+% 
+% where $E_l$ is the mean squared error (MSE) of MLE algorithm and $E_p$ the MSE of MPEM
+% algorithm. Wilcoxon Rank Sum test is also conducted to test the null
+% hypothesis that RI is not signficiantly larger than zero.
+
+load noise_robust_data_example.mat
+[rb_idx, rb_mean, rb_ci, stat] = data_mse_analysis(P, s, d_snr, snr_hat, P_hat);
+
+%%
+% RIs between the testing SNR points are indicated by the smoothed curve.
+x = d_snr(~(d_snr == Inf));
+v = rb_mean;
+xq = min(x):1:max(x);
+vq = interp1(x, v, xq, 'pchip'); % Shape-preserving piecewise cubic interpolation
+
+%% Show Results
+% Display RIs as a function of testing SNR. The error bar indicates 95%
+% confidence interval.  Both the mean and the confidence interval of RIs
+% are estimated with <matlab:doc('bootstrp') bootsrp> resamping method.
+f = @(s, m, c) errorbar(s(~(s == Inf)), m, m-c(1, :), c(2, :)-m, 'o');
+
+figure
+eb = f(d_snr, rb_mean, rb_ci); % return errorbar object
+hold on
+plot(xq, vq)
+ax = axis(gca);
+xlim([ax(1)-5, ax(2)+5])
+ylim([-.1 .4])
+plot(xlim, [0 0])
+legend(eb, 'RI')
+xlabel('Tested SNR (dB)')
+ylabel('Robustness Index')
+
+%%
+%
+% <<noise_robustness_analysis_ri.png>>
+% 
+
+%%
+% Display the results of Wilcoxon Rank Sum test
+cprintf('Keywords', 'Significant test at each SNR point:\n')
+disp(stat)
+##### SOURCE END #####
+--></body></html>

@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding="utf-8"?>
 <!-- Copyright 2017 Richard J. Cui. -->
-<!-- $Revision: 0.1 $ $Date: Sun 03/19/2017 11:00:46.482 AM $ -->
+<!-- $Revision: 0.2 $ $Date: Mon 03/20/2017  2:23:48.512 PM $ -->
 <!-- -->
 <!-- 3236 E Chandler Blvd Unit 2036 -->
 <!-- Phoenix, AZ 85048, USA -->
@@ -31,8 +31,14 @@
         </tocitem>
         
         <!-- Test of robustness against noise -->
-        <tocitem target="mytbx_ug_intro.html" image="HelpIcon.DEMO">
-            Noise Robustness Test
+        <tocitem target="noise_robustness.html" image="HelpIcon.DEMO">
+            Robustness Against Noise
+            <tocitem target="noise_robustness_exp.html">
+                Noise Robustness Experiments
+            </tocitem>
+            <tocitem target="noise_robustness_analysis.html">
+                Noise Robustness Analysis
+            </tocitem>
         </tocitem>
         
         <!-- Optional link or links to your or other Web sites -->

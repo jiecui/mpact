@@ -1,8 +1,8 @@
 %% Decompose Deep Crossed Chirplets
 % This simulation compares the results of MPEM and MLE algorithm for the
 % estimation of the components of a signal, consisting of an upward and a
-% downward chirplet, embedded in noise. 
-% <matlab:edit('DecompDeepCrossChirplet.m') open> 
+% downward chirplet, embedded in noise. See the 
+% <matlab:edit('DecompDeepCrossChirplet.m') code>. 
 
 %% Create and display the simulated signal
 % First, let's synthesize the simulated signal, which consists of an upward
