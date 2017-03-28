@@ -5,7 +5,20 @@
 
 %% Set parameters
 % First, set the parameters of chirplet signals. The signal used in testing
-% consists of two components, an upward and a downward chirplet.
+% consists of two components, an upward chirplet $g_{I_u}$ with the
+% instantaneous frequency changing from 0 to $\pi$,
+% 
+% $$g_{I_u} = \frac{1}{\sqrt{\sqrt{\pi}N/3}}
+% \exp\left\{-\frac{1}{2}\left[\frac{t-(N/2+1)}{N/3}\right]^2\right\}
+% \cos\left\{\left[\frac{\pi}{2}(t-(\frac{N}{2}+1))\right](t-(\frac{N}{2}+1))\right\},$$
+% 
+% and a downward chirplet $g_{I_d}$ with the instantaneous frequency
+% changing from $\pi$ to 0,
+% 
+% $$g_{I_d} = \frac{1}{\sqrt{\sqrt{\pi}N/3}}
+% \exp\left\{-\frac{1}{2}\left[\frac{t-(N/2+1)}{N/3}\right]^2\right\}
+% \cos\left\{\left[-\frac{\pi}{2}(t-(\frac{N}{2}+1))\right](t-(\frac{N}{2}+1))\right\}.$$
+% 
 N = 100; % signal length
 P = [1*exp(1i*0), N/2+1, pi/2,  pi/N, N/3; % up-chirplet
      1*exp(1i*0), N/2+1, pi/2, -pi/N, N/3]; % down-chirplet
