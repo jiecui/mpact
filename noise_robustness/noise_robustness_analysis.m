@@ -10,7 +10,7 @@
 % relative noise robustness of the algorithms is indicated by the
 % _Robustness Index_ (RI),
 %
-% $$I = \frac{E_l-E_p}{E_l+E_p},$$
+% $$R = \frac{E_l-E_p}{E_l+E_p},$$
 % 
 % where $E_l$ is the mean squared error (MSE) of MLE algorithm and $E_p$ the MSE of MPEM
 % algorithm. Wilcoxon Rank Sum test is also conducted to test the null

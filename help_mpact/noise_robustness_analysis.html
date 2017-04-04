@@ -6,7 +6,7 @@
    <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
-      --><title>Noise Robustness Analysis</title><meta name="generator" content="MATLAB 9.1"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2017-03-21"><meta name="DC.source" content="noise_robustness_analysis.m"><style type="text/css">
+      --><title>Noise Robustness Analysis</title><meta name="generator" content="MATLAB 9.1"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2017-04-03"><meta name="DC.source" content="noise_robustness_analysis.m"><style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
 
 html { min-height:100%; margin-bottom:1px; }
@@ -66,7 +66,7 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
 
 
 
-  </style></head><body><div class="content"><h1>Noise Robustness Analysis</h1><!--introduction--><p>Perform analysis of noise robustness of the algorithms using data from <a href="matlab:web('noise_robustness_exp.html','-helpbrowser')">Noise Robustness Experiments</a>, and display the results. See the <a href="matlab:edit('noise_robustness_analysis.m')">code</a>.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Robustness Indexes Analysis</a></li><li><a href="#3">Show Results</a></li></ul></div><h2 id="1">Robustness Indexes Analysis</h2><p>The data for the analysis are in <i>noise_robust_data.mat</i>.  As an example of the analysis, load the data in <i>noise_robust_data_example.mat</i>.  The relative noise robustness of the algorithms is indicated by the <i>Robustness Index</i> (RI),</p><p><img src="noise_robustness_analysis_eq17330039651224241804.png" alt="$$I = \frac{E_l-E_p}{E_l+E_p},$$" style="width:62px;height:26px;"></p><p>where <img src="noise_robustness_analysis_eq14017910998944930217.png" alt="$E_l$" style="width:10px;height:10px;"> is the mean squared error (MSE) of MLE algorithm and <img src="noise_robustness_analysis_eq15858340530470344199.png" alt="$E_p$" style="width:12px;height:11px;"> the MSE of MPEM algorithm. Wilcoxon Rank Sum test is also conducted to test the null hypothesis that RI is not signficiantly larger than zero.</p><pre class="codeinput">load <span class="string">noise_robust_data_example.mat</span>
+  </style></head><body><div class="content"><h1>Noise Robustness Analysis</h1><!--introduction--><p>Perform analysis of noise robustness of the algorithms using data from <a href="matlab:web('noise_robustness_exp.html','-helpbrowser')">Noise Robustness Experiments</a>, and display the results. See the <a href="matlab:edit('noise_robustness_analysis.m')">code</a>.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Robustness Indexes Analysis</a></li><li><a href="#3">Show Results</a></li></ul></div><h2 id="1">Robustness Indexes Analysis</h2><p>The data for the analysis are in <i>noise_robust_data.mat</i>.  As an example of the analysis, load the data in <i>noise_robust_data_example.mat</i>.  The relative noise robustness of the algorithms is indicated by the <i>Robustness Index</i> (RI),</p><p><img src="noise_robustness_analysis_eq02365340194328904831.png" alt="$$R = \frac{E_l-E_p}{E_l+E_p},$$" style="width:65px;height:26px;"></p><p>where <img src="noise_robustness_analysis_eq14017910998944930217.png" alt="$E_l$" style="width:10px;height:10px;"> is the mean squared error (MSE) of MLE algorithm and <img src="noise_robustness_analysis_eq15858340530470344199.png" alt="$E_p$" style="width:12px;height:11px;"> the MSE of MPEM algorithm. Wilcoxon Rank Sum test is also conducted to test the null hypothesis that RI is not signficiantly larger than zero.</p><pre class="codeinput">load <span class="string">noise_robust_data_example.mat</span>
 [rb_idx, rb_mean, rb_ci, stat] = data_mse_analysis(P, s, d_snr, snr_hat, P_hat);
 </pre><p>RIs between the testing SNR points are indicated by the smoothed curve.</p><pre class="codeinput">x = d_snr(~(d_snr == Inf));
 v = rb_mean;
@@ -101,7 +101,7 @@ disp(stat)
 % relative noise robustness of the algorithms is indicated by the
 % _Robustness Index_ (RI),
 %
-% $$I = \frac{E_l-E_p}{E_l+E_p},$$
+% $$R = \frac{E_l-E_p}{E_l+E_p},$$
 % 
 % where $E_l$ is the mean squared error (MSE) of MLE algorithm and $E_p$ the MSE of MPEM
 % algorithm. Wilcoxon Rank Sum test is also conducted to test the null
