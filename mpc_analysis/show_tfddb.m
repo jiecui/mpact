@@ -1,6 +1,9 @@
 function show_tfddb(tfd,x,dbs,t,f,fnts)
 % show_tfddb -- show an image plot of a TFD with a dB amplitude scale
 % together with the original signal and its spectrum for a real signal.
+% 
+% Note:
+%   Archaic. Use 'show_tfd.m'.
 %
 %  Syntax:
 %       show_tfddb(tfd,x,dbs,t,f,fnts)
@@ -21,8 +24,8 @@ function show_tfddb(tfd,x,dbs,t,f,fnts)
 %           Canada
 % Email:    richard.cui@utoronto.ca
 
-% (C)2005 Richard J. Cui; Created 26-Feb-2005
-% $Revision: 0.2 $  $Date: 26-Feb-2005 22:32:54$
+% (C)2005-2017 Richard J. Cui; Created 26-Feb-2005
+% $Revision: 0.3 $  $Date: Thu 04/06/2017 12:53:34.454 PM $
 
 % parse inputs
 error(nargchk(1, 6, nargin));

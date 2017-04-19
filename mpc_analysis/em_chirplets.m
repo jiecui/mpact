@@ -30,11 +30,18 @@ function [P, e, res] = em_chirplets(x, P, res, M, D, i0, radix, mnits, verbose)
 %   [2]	J. Cui, "Adaptive chirplet transform for the analysis of visual 
 %       evoked potentials," Doctor of Philosophy Dissertation (Ph.D.),
 %       University of Toronto, 2006.
+%   [3]	M. Feder and E. Weinstein, "Parameter estimation of superimposed
+%       signals using the EM algorithm," IEEE Transactions on Acoustics,
+%       Speech, and Signal Processing, vol. 36, pp. 477-489, 1988/04//
+%       1988.
+%   [4]	J. C. O'Neill and P. Flandrin, "Chirp hunting," in Proceedings of 
+%       the IEEE-SP International Symposium on Time-Frequency and
+%       Time-Scale Analysis, 1998, pp. 425-428.
 % 
 % See also make_chirplets.
 
-% Copyright 2016 Richard J. Cui. Created: Wed 12/14/2016  9:47:28.260 PM
-% $Revision: 0.2 $  $Date: Fri 12/16/2016  3:11:09.454 PM $
+% Copyright 2016-2017 Richard J. Cui. Created: Wed 12/14/2016  9:47:28.260 PM
+% $Revision: 0.3 $  $Date: Tue 04/18/2017  4:17:32.327 PM $
 %
 % 3236 E Chandler Blvd Unit 2036
 % Phoenix, AZ 85048, USA
@@ -61,16 +68,18 @@ while sum(sum(Pe > Ts)) && (j <= mnits) && (Q > 1)
     % E-Step
     % ------
     z = make_chirplets(N, P0);
-    d = x - z;
+    d = x - z; % note: d should be cloase to WGN
     
     % ------
     % M-Step
     % ------
     for k = 1:Q
-        z_k = make_chirplets(N, P(k,:));
-        y_k = z_k + d; % Note: d/Q is not efficient; should look into it
-        P_k = mp_chirplet(y_k, M, D, i0, radix, false);
-        P(k,:) = P_k;
+        if mod(k, j) == 0 % O'Neill's method
+            z_k = make_chirplets(N, P(k,:));
+            y_k = z_k + d; % Note: d/Q is not efficient; should look into it
+            P_k = mp_chirplet(y_k, M, D, i0, radix, false);
+            P(k,:) = P_k;
+        end % if
     end % for
     Pe = abs(P(:, 2:5) - P0(:, 2:5));
     if verbose, fprintf('%d ', j); end
