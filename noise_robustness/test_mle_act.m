@@ -1,21 +1,29 @@
-function [t, P] = test_mle_act(Q, spn)
+function [P, t] = test_mle_act(Q, s, varargin)
 % TEST_MLE_ACT test noise robustness of MLE-ACT algorithm
 %
 % Syntax:
-%
+%   P = test_mle_act(Q, spn)
+%   P = test_mle_act(____, 'PType', p_type)
+%   P = test_mle_act(____, 'Verbose', verb)
+%   [P, t] = test_le_act(____)
+% 
 % Input(s):
 %   Q           - number of chiprlets desired
-%   spn         - signal + noise
+%   s           - signal
+%   PType       - (parameter) type of chirplet parameter P, p_type = 
+%                 {'Oneill', 'Cohen'}
+%   Verbose     - (Parameter) show details, verb = {'No', 
+%                 'Yes', 'vv'} (default verb = 'No')
 %
 % Output(s):
-%   t           - time cost of this run (seconds)
-%   P           - [A, tc, fc, cr, d; ...]
+%   P           - table of chirplet parameters [A, tc, fc, cr, d; ...]
 %                   A   :amplitude of the estimated chirplets 1 x Q array
 %                   tc  :time-center
 %                   fc  :frequency-center
 %                   cr  :chirp-rate
 %                   d   :duration
-%
+%                 (see make_chirplets.m for the details)
+%   t           - time cost of this run (seconds)
 %
 % Output(s):
 %
@@ -28,7 +36,7 @@ function [t, P] = test_mle_act(Q, spn)
 % See also .
 
 % Copyright 2017 Richard J. Cui. Created: Thu 02/23/2017  3:31:37.681 PM
-% $Revision: 0.1 $  $Date: Thu 02/23/2017  3:31:37.694 PM $
+% $Revision: 0.2 $  $Date: Wed 05/31/2017  4:04:56.096 PM $
 %
 % 3236 E Chandler Blvd Unit 2036
 % Phoenix, AZ 85048, USA
@@ -40,7 +48,13 @@ function [t, P] = test_mle_act(Q, spn)
 % =========================================================================
 tv = tic;
 
-p = do_mle_act(Q, spn);
+p = check_inputs(Q, s, varargin{:});
+Q = p.Q;
+s = p.s;
+p_type = p.PType;
+verb = p.Verbose;
+
+p = do_mle_act(Q, s,  p_type, verb);
 P = array2table(p, 'VariableNames', {'A', 'tc', 'fc', 'cr', 'd'});
 
 t = toc(tv);
@@ -50,7 +64,27 @@ end % function test_mle_act
 % =========================================================================
 % subroutines
 % =========================================================================
-function P = do_mle_act(Q, spn)
+function q = check_inputs(Q, s, varargin)
+
+ptype_str = {'oneill', 'cohen'};
+verb_str = {'No', 'Yes', 'vv'};
+
+p = inputParser;
+
+p.addRequired('Q', @isnumeric);
+p.addRequired('s', @isnumeric);
+p.addParameter('PType', 'Oneill', @(x) any(validatestring(lower(x), ptype_str)));
+p.addParameter('Verbose', 'No', @(x) any(validatestring(lower(x), verb_str)));
+
+p.parse(Q, s, varargin{:});
+
+q = p.Results;
+q.PType = lower(q.PType);
+q.Verbose = lower(q.Verbose);
+
+end % function
+
+function P = do_mle_act(Q, spn, p_type, verbose)
 % chirplet decomposition with MLE algorithm
 
 % initial parameters
@@ -61,13 +95,12 @@ fc  = pi/2; % frequency-center
 cr  = 0; % chirprate guess
 d   = N/4; % initial guess of duration
 M   = 256; % resolution for Newton-Raphson refinement
-verbose = 'No'; % don't show notes
 mnits   = 10; % max number of iteration for refinement
 level   = 2; % difficult level
 
 CP0 = [tc, fc, cr, d]; % initial chirplet parameters (no amplitude)
 P = mle_adapt_chirplets(spn, Q, M, CP0, verbose, mnits, level,...
-    'RefineAlgorithm', 'MaxLikeliEst');
+    'RefineAlgorithm', 'MaxLikeliEst', 'PType', p_type);
 
 end % function
 

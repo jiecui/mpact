@@ -17,7 +17,7 @@ function varargout = mp_act_signal(s, Q, M, D, i0, a, ref_alg, verbose, mnits, l
 % See also .
 
 % Copyright 2016-2017 Richard J. Cui. Created: Sat 12/17/2016 10:33:10.954 AM
-% $Revision: 0.3 $  $Date: Sun 02/19/2017 10:05:56.162 PM $
+% $Revision: 0.5 $  $Date: Tue 07/11/2017  3:36:40.574 PM $
 %
 % 3236 E Chandler Blvd Unit 2036
 % Phoenix, AZ 85048, USA
@@ -27,8 +27,6 @@ function varargout = mp_act_signal(s, Q, M, D, i0, a, ref_alg, verbose, mnits, l
 if ~exist('level', 'var')
     level = 2;
 end % if
-
-fs = 1; % assume normalized sampling frequency
 
 % decompose signal
 % ----------------
@@ -41,7 +39,8 @@ P = mp_adapt_chirplets(x, Q, M, D, i0, a, verbose, mnits, level,...
 % get figure name
 fig_name = get_fig_name(ref_alg);
 % show figure
-show_decomp(s, P, fs, fig_name)
+dbs = 40;
+show_decomp(s, P, fig_name, dbs)
 
 % output
 % ------

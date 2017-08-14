@@ -3,12 +3,13 @@ function [P, res] = mle_adapt_chirplets(x, Q, varargin)
 %
 %  Syntax:
 %       [P, res] = mle_adapt_chirplets(x, Q)
-%       [P, res] = mle_adapt_chirplets(x, Q, M)
-%       [P, res] = mle_adapt_chirplets(x, Q, M, CP0)
-%       [P, res] = mle_adapt_chirplets(x, Q, M, CP0, verbose)
-%       [P, res] = mle_adapt_chirplets(x, Q, M, CP0, verbose, mnits)
-%       [P, res] = mle_adapt_chirplets(x, Q, M, CP0, verbose, mnits, level)
+%       [P, res] = mle_adapt_chirplets(____, M)
+%       [P, res] = mle_adapt_chirplets(____, M, CP0)
+%       [P, res] = mle_adapt_chirplets(____, M, CP0, verbose)
+%       [P, res] = mle_adapt_chirplets(____, M, CP0, verbose, mnits)
+%       [P, res] = mle_adapt_chirplets(____, M, CP0, verbose, mnits, level)
 %       [P, res] = mle_adapt_chirplets(____, 'RefineAlgorithm', ref_alg)
+%       [P, res] = mle_adapt_chirplets(____, 'PType', p_type)
 %
 %  Inputs:
 %       x       - signal
@@ -21,6 +22,8 @@ function [P, res] = mle_adapt_chirplets(x, Q, varargin)
 %       mnits   - maximum number of iterations (optional, default = 5)
 %       level   - level of difficulty of MLE
 %       ref_alg - { 'expectmax', 'maxlikeliest' }
+%       PType   - (parameter) type of chirplet parameter P, p_type = 
+%                 {'Oneill', 'Cohen'}
 %
 %  Outputs:
 %       P       - Q_by_5 matrix of chirplet parameters (see make_chirplets.m)
@@ -40,7 +43,7 @@ function [P, res] = mle_adapt_chirplets(x, Q, varargin)
 % See also make_chirplets.
 
 % Copyright 2017 Richard J. Cui. Created: Thu 02/23/2017  3:48:56.670 PM
-% $ Revision: 0.1 $  $ Date: Fri 02/24/2017 12:19:07.091 PM $
+% $ Revision: 0.2 $  $ Date: Wed 05/31/2017  4:17:25.467 PM $
 %
 % 3236 E Chandler Blvd Unit 2036
 % Phoenix, AZ 85048, USA
@@ -60,6 +63,9 @@ verbose = p.Results.verbose;
 mnits   = p.Results.mnits;
 level   = p.Results.level;
 ref_alg = p.Results.RefineAlgorithm;
+p_type  = lower(p.Results.PType);
+
+N = length(x);
 
 % =========================================================================
 % find chirplets use MP-EM algorithm
@@ -100,10 +106,17 @@ while done == false
     P = cat(1, P, P_i);
     
     if strcmp(verbose, 'yes') || strcmp(verbose, 'vv')
+        % display P in correct format
+        switch p_type
+            case 'cohen'
+                P_disp = POn2Co(N, P_i);
+            case 'oneill'
+                P_disp = P_i;
+        end % switch
         cprintf('Keywords', '\nEstimated chirplet %d:', i);
         cprintf('Keywords', ...
-            '\n|A| = %-6.2f, Tc = %-6.2f, Fc = %-4.2f, Cr = %-7.4f, Dt = %-6.2f\n',...
-            abs(P_i(1)), P_i(2), P_i(3), P_i(4), P_i(5));
+            '\n|A| = %-6.2f, Tc = %-6.2f, Fc = %-4.2f, Cr = %-7.4f, D = %-6.2f\n',...
+            abs(P_disp(1)), P_disp(2), P_disp(3), P_disp(4), P_disp(5));
     end % if
     % ------------------------------
     % refine the estimated chirplets 
@@ -135,14 +148,21 @@ while done == false
     
     % show details if asked for...
     if (strcmp(verbose, 'yes') || strcmp(verbose, 'vv')) && i > 1
+        % display P in correct format
+        switch p_type
+            case 'cohen'
+                P_disp = POn2Co(N, P);
+            case 'oneill'
+                P_disp = P;
+        end % switch
         cprintf('Keywords', '\n--------------');
         cprintf('Keywords', '\n Results');
         cprintf('Keywords', '\n--------------');
         cprintf('Keywords', '\nNo.\t%s\t%s\t%s\t%s\t%s', ...
-            '|A|', 'Tc', 'Fc', 'Cr', 'Dt');
+            '|A|', 'Tc', 'Fc', 'Cr', 'D');
         for k = 1:i
             cprintf('Keywords', '\n%-5d\t%-6.2f\t%-7.2f\t%-4.2f\t%-+7.4f\t%-6.2f',...
-                k,abs(P(k,1)),P(k,2),P(k,3),P(k,4),P(k,5));
+                k,abs(P_disp(k,1)),P_disp(k,2),P_disp(k,3),P_disp(k,4),P_disp(k,5));
         end
         fprintf('\n');
     end %if
@@ -156,6 +176,12 @@ while done == false
     end %if
     i = i + 1;
 end % while
+
+% convert P format if necessary
+switch p_type
+    case 'cohen'
+        P = POn2Co(N, P);
+end % switch
 
 end % function
 
@@ -172,6 +198,7 @@ function p = check_inputs(x, Q, varargin)
 
 validAlgorithm = { 'expectmax', 'maxlikeliest' };
 validVerbose = {'yes', 'no', 'vv'};
+ptype_str = {'oneill', 'cohen'};
 
 p = inputParser;
 
@@ -185,6 +212,7 @@ p.addOptional('mnits', 5, @isnumeric);
 p.addOptional('level', 2, @(x) any([0 1 2 3] == x));
 p.addParameter('RefineAlgorithm', 'expectmax',...
     @(x) any(validatestring(lower(x), validAlgorithm)));
+p.addParameter('PType', 'Oneill', @(x) any(validatestring(lower(x), ptype_str)));
 
 p.parse(x, Q, varargin{:});
 

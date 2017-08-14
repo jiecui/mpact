@@ -9,10 +9,19 @@
 % chirplet |s1|, chirp-rate changing from 0 to $\pi$, and a downwoard
 % chriplet |s2|, from $\pi$ to 0.
 N   = 100; % signal size
-P1 = [10*exp(1i*0), N/2+1, pi/2,  pi/N, N/3]; % up-chirplet 0 -> pi
-P2 = [10*exp(1i*0), N/2+1, pi/2, -pi/N, N/3]; % down-chirplet 0 -> -pi
-s1 = real(make_chirplets(N, P1)); % the synthesized signal
-s2 = real(make_chirplets(N, P2)); % the synthesized signal
+
+% use Cohen equation
+p_type = 'Cohen';
+P1 = [10, 1/2, pi/2,  pi, 1/18]; % up-chirplet 0 -> pi
+P2 = [10, 1/2, pi/2, -pi, 1/18]; % down-chirplet pi --> 0
+s1 = real(make_chirplets(N, P1, 'PType', p_type)); % the synthesized signal
+s2 = real(make_chirplets(N, P2, 'PType', p_type)); % the synthesized signal
+
+% use O'Neill's equation
+% P1 = [10*exp(1i*0), N/2, pi/2,  pi/N, 3*sqrt(N)]; % up-chirplet 0 -> pi
+% P2 = [10*exp(1i*0), N/2, pi/2, -pi/N, 3*sqrt(N)]; % down-chirplet 0 -> -pi
+% s1 = real(make_chirplets(N, P1)); % the synthesized signal
+% s2 = real(make_chirplets(N, P2)); % the synthesized signal
 s = s1+s2;
 
 %% 
@@ -59,9 +68,8 @@ plot(s), grid on, axis(sh, ax_lmt), title('clean = S_1 + S_2');
 % Show time-freqency distributions of the simulated signal in _short-time
 % Fourier transform_ (STFT), _Viger-Ville distribution_ (WVD) and _adpative
 % chirplet spectrum_ (ACS)
-fs  = 1; % normalized sampling frequency
 P = [P1; P2];
-show_decomp(s, P, fs, 'Clean signal')
+show_decomp(s, P, 'Clean signal', 'PType', p_type)
 
 %% 
 % * Short-time Fourier transform of *clean* signal
@@ -92,8 +100,8 @@ show_decomp(s, P, fs, 'Clean signal')
 
 tests = hilbert(spn); % convert it into analytic signal
 Q = 2; % number of atoms desired
-[~, P_mpem] = test_mpem_act(Q, tests); % with MPEM algorithm
-[~, P_mle] = test_mle_act(Q, tests); % with MLE algorithm
+P_mpem = test_mpem_act(Q, tests, 'PType', p_type, 'Verbose', 'yes'); % with MPEM algorithm
+P_mle  = test_mle_act(Q, tests, 'PType', p_type, 'Verbose', 'yes'); % with MLE algorithm
 
 %% Compare the original and recontructed signals
 % Finally, we compare the results from MPEM and MLE algorithms.
@@ -102,8 +110,8 @@ Q = 2; % number of atoms desired
 % Results from MPEM algorithm
 p_mpem = table2array(P_mpem);
 fig_name = get_fig_name('ExpectMax');
-show_decomp(spn, p_mpem, fs, fig_name) % on t-f plane
-comp_decomp(s, spn, p_mpem, fig_name) % on time domain
+show_decomp(spn, p_mpem, fig_name, 'PType', p_type) % on t-f plane
+comp_decomp(s, spn, p_mpem, fig_name, 'PType', p_type) % on time domain
 
 %%
 % * Comparison between clean and reconstructed signal (MPEM)
@@ -121,8 +129,8 @@ comp_decomp(s, spn, p_mpem, fig_name) % on time domain
 % Results from MLE algorithm
 p_mle = table2array(P_mle);
 fig_name = get_fig_name('MaxLikeliEst');
-show_decomp(spn, p_mle, fs, fig_name) % t-f plane
-comp_decomp(s, spn, p_mle, fig_name) % on time domain
+show_decomp(spn, p_mle, fig_name, 'PType', p_type) % t-f plane
+comp_decomp(s, spn, p_mle, fig_name, 'PType', p_type) % on time domain
 
 %%
 % * Comparison between clean and reconstructed signal (MLE)
@@ -138,7 +146,7 @@ comp_decomp(s, spn, p_mle, fig_name) % on time domain
 
 %%
 % Compare squared error between MPEM and MLE algrithms
-comp_sqerr(s, P_mpem, P_mle)
+comp_sqerr(s, p_mpem, p_mle, 'PType', p_type)
 
 %%
 % 

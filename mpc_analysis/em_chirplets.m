@@ -1,4 +1,5 @@
-function [P, e, res] = em_chirplets(x, P, res, M, D, i0, radix, mnits, verbose)
+function [P, e, res] = em_chirplets(x, P, res, M, D, i0, radix, mnits,...
+    verbose, mstep)
 % EM_CHIRPLETS refine multiple chirplets with Expectation-Maximization algorithm
 %
 % Syntax:
@@ -8,10 +9,11 @@ function [P, e, res] = em_chirplets(x, P, res, M, D, i0, radix, mnits, verbose)
 %   x           - signal
 %   P           - vector of chirplet parameters (see make_chirplets.m)
 %   res         - residual = norm(signal - chirplets)
-%   M           - resolution for Newton-Raphson refinement (optional, 
-%   radix       - radix of scale (default = 2)
-%   mnits       - maximum number of iterations (optional, default = 5)
-%   verbose     - verbose flag (default = false)
+%   M           - resolution for Newton-Raphson refinement 
+%   radix       - radix of scale
+%   mnits       - maximum number of iterations
+%   verbose     - verbose flag
+%   mstep       - method of m-step, 'ONEILL' (default) or 'FEDER'
 %
 % Output(s):
 %   P           - vector of chirplet parameters (see make_chirplets.m)
@@ -21,6 +23,8 @@ function [P, e, res] = em_chirplets(x, P, res, M, D, i0, radix, mnits, verbose)
 % Example:
 %
 % Note:
+%   See mp_adapt_chirplets.m for some explanation of the input/output
+%   variables.
 %
 % References:
 %   [1]	S. Mann and S. Haykin, "The adaptive chirplet - an adaptive 
@@ -38,10 +42,10 @@ function [P, e, res] = em_chirplets(x, P, res, M, D, i0, radix, mnits, verbose)
 %       the IEEE-SP International Symposium on Time-Frequency and
 %       Time-Scale Analysis, 1998, pp. 425-428.
 % 
-% See also make_chirplets.
+% See also make_chirplets, mp_adapt_chirplets.
 
 % Copyright 2016-2017 Richard J. Cui. Created: Wed 12/14/2016  9:47:28.260 PM
-% $Revision: 0.3 $  $Date: Tue 04/18/2017  4:17:32.327 PM $
+% $Revision: 0.5 $  $Date: Sat 05/06/2017  2:33:57.838 PM $
 %
 % 3236 E Chandler Blvd Unit 2036
 % Phoenix, AZ 85048, USA
@@ -51,6 +55,10 @@ function [P, e, res] = em_chirplets(x, P, res, M, D, i0, radix, mnits, verbose)
 % =========================================================================
 % Input parameters and options
 % =========================================================================
+if ~exist('mstep', 'var')
+    mstep = 'oneill';
+end % if
+
 N   = length(x); % signal length
 Q   = size(P, 1); % number of chirplets
 P0  = zeros(Q, 5); % initial values of chirplet parameters
@@ -73,14 +81,7 @@ while sum(sum(Pe > Ts)) && (j <= mnits) && (Q > 1)
     % ------
     % M-Step
     % ------
-    for k = 1:Q
-        if mod(k, j) == 0 % O'Neill's method
-            z_k = make_chirplets(N, P(k,:));
-            y_k = z_k + d; % Note: d/Q is not efficient; should look into it
-            P_k = mp_chirplet(y_k, M, D, i0, radix, false);
-            P(k,:) = P_k;
-        end % if
-    end % for
+    P = cal_mstep(j, N, P, d, M, D, i0, radix, mstep);
     Pe = abs(P(:, 2:5) - P0(:, 2:5));
     if verbose, fprintf('%d ', j); end
     j = j + 1;
@@ -93,6 +94,51 @@ y = make_chirplets(N,P);
 e = x - y;
 res = cat(1, res, norm(e));
 
-end % function lem_chirplets
+end % function em_chirplets
+
+% =========================================================================
+% update the residual
+% =========================================================================
+function P = mstep_oneill(j, N, P, d, M, D, i0, radix)
+% O'Neill method of m-step
+
+Q = size(P, 1); % number of chirplets
+
+for k = 1:Q
+    if mod(k, j) == 0 % O'Neill's method
+        z_k = make_chirplets(N, P(k,:));
+        y_k = z_k + d;
+        P_k = mp_chirplet(y_k, M, D, i0, radix, false);
+        P(k,:) = P_k;
+    end % if
+end % for
+
+end % function
+
+function P = mstep_feder(N, P, d, M, D, i0, radix)
+% Feder method of m-step
+
+Q = size(P, 1); % number of chirplets
+
+for k = 1:Q
+    z_k = make_chirplets(N, P(k,:));
+    y_k = z_k + d/Q;
+    P_k = mp_chirplet(y_k, M, D, i0, radix, false);
+    P(k,:) = P_k;
+end % for
+
+end % function
+
+function P = cal_mstep(j, N, P, d, M, D, i0, radix, mstep)
+% calculate m-step
+
+switch lower(mstep)
+    case 'feder' % refine all the chirplets at each iteration
+        P = mstep_feder(N, P, d, M, D, i0, radix);
+    case 'oneill' % refine only one chirplet at each iteration
+        P = mstep_oneill(j, N, P, d, M, D, i0, radix);
+end % switch
+
+end % function
 
 % [EOF]

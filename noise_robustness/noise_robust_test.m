@@ -58,7 +58,7 @@ for m = 1:num_test
         
         % test MPEM-ACT algorithm
         % -----------------------
-        [t_mn, P_mn] = test_mpem_act(Q, spn_mn);
+        [P_mn, t_mn] = test_mpem_act(Q, spn_mn);
         tcost.MPEM(m, n)        = t_mn;
         p_hat.MPEM.A(m, n, :)   = P_mn.A;
         p_hat.MPEM.tc(m, n, :)  = P_mn.tc;
@@ -68,7 +68,7 @@ for m = 1:num_test
         
         % test MLE algorithm
         % ------------------
-        [t_mn, P_mn] = test_mle_act(Q, spn_mn);
+        [P_mn, t_mn] = test_mle_act(Q, spn_mn);
         tcost.MLE(m, n)         = t_mn;
         p_hat.MLE.A(m, n, :)    = P_mn.A;
         p_hat.MLE.tc(m, n, :)   = P_mn.tc;

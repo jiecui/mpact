@@ -13,7 +13,8 @@ function wig = chrpltwvd_direct(P, n, f)
 %   wig     - length(n)_by_length(f) WVD
 %
 % Note:
-%   Assume the sampling frequency of chirplet is normalized to 1 Hz.
+%   Assume O'Neill's equation and the sampling frequency of chirplet is
+%   normalized to 1 Hz.
 % 
 % Example:
 %
