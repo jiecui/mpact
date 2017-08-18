@@ -6,7 +6,7 @@
    <!--
 This HTML was auto-generated from MATLAB code.
 To make changes, update the MATLAB code and republish this document.
-      --><title>Multi-component Chirplet Decomposition</title><meta name="generator" content="MATLAB 9.1"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2017-03-21"><meta name="DC.source" content="MultiDecompChirplet.m"><style type="text/css">
+      --><title>Multi-component Chirplet Decomposition</title><meta name="generator" content="MATLAB 9.2"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2017-08-18"><meta name="DC.source" content="MultiDecompChirplet.m"><style type="text/css">
 html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
 
 html { min-height:100%; margin-bottom:1px; }
@@ -66,7 +66,7 @@ table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px soli
 
 
 
-  </style></head><body><div class="content"><h1>Multi-component Chirplet Decomposition</h1><!--introduction--><p>This simulation demonstrates the multi-component decomposition with MPEM algorithm. Ths simulation signals are proposed in Durka and Blinowska 1995 and Cui and Wang 2996. See the <a href="matlab:edit('MultiDecompChirplet.m')">code</a>.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Construct and display the signals</a></li><li><a href="#12">Perform adaptive chirplet decomposition with MP</a></li><li><a href="#15">References</a></li></ul></div><h2 id="1">Construct and display the signals</h2><p>The simulated signal consists of four major components, i.e. Wave I-IV.</p><p>First, let's set the signal length and sampling frequency of the signal.</p><pre class="codeinput">T = 512;        <span class="comment">% the signal duration</span>
+  </style></head><body><div class="content"><h1>Multi-component Chirplet Decomposition</h1><!--introduction--><p>This simulation demonstrates the multi-component decomposition with MPEM algorithm. Ths simulation signals are proposed in Durka and Blinowska 1995 and Cui and Wang 2006. See the <a href="matlab:edit('MultiDecompChirplet.m')">code</a>.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Construct and display the signals</a></li><li><a href="#12">Perform adaptive chirplet decomposition with MP</a></li><li><a href="#15">References</a></li></ul></div><h2 id="1">Construct and display the signals</h2><p>The simulated signal consists of four major components, i.e. Wave I-IV.</p><p>First, let's set the signal length and sampling frequency of the signal.</p><pre class="codeinput">T = 512;        <span class="comment">% the signal duration</span>
 fs = 1;         <span class="comment">% sampling frequency</span>
 </pre><div><ul><li>Wave I consists of a sine (A), a sawtooth (B) and a Gabor(C) waveform.</li></ul></div><pre class="codeinput">waveI = zeros(1,T);
 
@@ -143,12 +143,12 @@ M   = T; <span class="comment">% resolution for Newton-Raphson refinement</span>
 verbose = <span class="string">'Yes'</span>; <span class="comment">% show notes</span>
 mnits   = 5; <span class="comment">% max number of iteration for refinement</span>
 </pre><p><b>estimation with MPEM</b></p><pre class="codeinput">P = mp_act_signal(chirpsim, Q, M, D, i0, a, <span class="string">'ExpectMax'</span>, verbose, mnits);
-</pre><p>Compare the short-time Fourier transform of the simulated signal and the adaptive chirplet spectrum of the esimtated signal components.</p><p><img vspace="5" hspace="5" src="MultiDecompChirplet_sim_stft.png" alt=""> </p><p><img vspace="5" hspace="5" src="MultiDecompChirplet_sim_acs.png" alt=""> </p><h2 id="15">References</h2><div><ol><li>M. Akay and IEEE Engineering in Medicine and Biology Society,   Time-frequency and wavelets in biomedical signal processing, <i>New York:   IEEE Press</i>, 1998. pp. 305-406</li><li>P. J. Durka and K. J. Blinowska, "Analysis of EEG transients by means   of matching pursuit," <i>Ann Biomed Eng</i>, vol. 23, no. 5, pp. 608-611,   Sept.1995.</li><li>J. Cui and W. Wong, "The adaptive chirplet transform and visual evoked   potentials," <i>IEEE Transactions on Biomedical Engineering</i>, vol. 53, pp.   1378-1384, Jul 2006.</li></ol></div><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2016b</a><br></p></div><!--
+</pre><p>Compare the short-time Fourier transform of the simulated signal and the adaptive chirplet spectrum of the esimtated signal components.</p><p><img vspace="5" hspace="5" src="MultiDecompChirplet_sim_stft.png" alt=""> </p><p><img vspace="5" hspace="5" src="MultiDecompChirplet_sim_acs.png" alt=""> </p><h2 id="15">References</h2><div><ol><li>M. Akay and IEEE Engineering in Medicine and Biology Society,   Time-frequency and wavelets in biomedical signal processing, <i>New York:   IEEE Press</i>, 1998. pp. 305-406</li><li>P. J. Durka and K. J. Blinowska, "Analysis of EEG transients by means   of matching pursuit," <i>Ann Biomed Eng</i>, vol. 23, no. 5, pp. 608-611,   Sept.1995.</li><li>J. Cui and W. Wong, "The adaptive chirplet transform and visual evoked   potentials," <i>IEEE Transactions on Biomedical Engineering</i>, vol. 53, pp.   1378-1384, Jul 2006.</li></ol></div><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2017a</a><br></p></div><!--
 ##### SOURCE BEGIN #####
 %% Multi-component Chirplet Decomposition
 % This simulation demonstrates the multi-component decomposition with MPEM
 % algorithm. Ths simulation signals are proposed in Durka and Blinowska
-% 1995 and Cui and Wang 2996. See the 
+% 1995 and Cui and Wang 2006. See the 
 % <matlab:edit('MultiDecompChirplet.m') code>. 
 
 %% Construct and display the signals

@@ -3,7 +3,7 @@
     <?xml-stylesheet type="text/xsl"href="optional"?>
     <!-- info.xml file for MP-ACT toolbox -->
     <!-- Copyright 2017 Richard J. Cui. -->
-    <!-- $Revision: 0.1 $ $Date: Sun 03/19/2017 11:00:46.482 AM $ -->
+    <!-- $Revision: 0.2 $ $Date: Thu 08/17/2017  5:34:15.862 PM $ -->
     <!-- -->
     <!-- 3236 E Chandler Blvd Unit 2036 -->
     <!-- Phoenix, AZ 85048, USA -->
@@ -13,7 +13,7 @@
     <!-- (Required) element; matlabrelease content is not currently used -->
     <matlabrelease>R2016b</matlabrelease>
     <!-- (Required) The name element appears in the Contents pane -->
-    <name>Adaptive Chirplet Transform with MP </name>
+    <name>Adaptive Chirplet Transform using MP </name>
     <!-- (Required) The type elementidentifies your package; pick one: -->
     <!-- matlab, toolbox, simulink, blockset, links_targets  -->
     <type>toolbox</type>

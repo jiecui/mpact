@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding="utf-8"?>
 <!-- Copyright 2017 Richard J. Cui. -->
-<!-- $Revision: 0.2 $ $Date: Mon 03/20/2017  2:23:48.512 PM $ -->
+<!-- $Revision: 0.3 $ $Date: Thu 08/17/2017  5:34:15.862 PM $ -->
 <!-- -->
 <!-- 3236 E Chandler Blvd Unit 2036 -->
 <!-- Phoenix, AZ 85048, USA -->
@@ -9,7 +9,7 @@
 <toc version="2.0">
     <!-- First tocitem specifies top level in Help browser Contents pane -->
     <!-- This can be a roadmap page, as shown below, or a content page -->
-    <tocitem target="mpact_toolbox.html">Adaptive Chirplet Transform with MP Toolbox
+    <tocitem target="mpact_toolbox.html">Adaptive Chirplet Transform using MP Toolbox
         <!-- Nest tocitems to create hierarchical entries in  Contents-->
         <!-- To include icons, use the following syntax for tocitems: -->
         <!-- <tocitem target="foo.html" image="HelpIcon.NAME"> -->

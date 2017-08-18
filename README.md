@@ -1,7 +1,7 @@
 MPACT
 =====
 
-Adatpive Chirplet Transform with Matching Pursuit Algorithm
+Adatpive Chirplet Transform using Matching Pursuit Algorithm (MP-ACT)
 
 **MPACT** is an open-source MatLab(R) toolbox that implements multi-component chirplet signal analysis using matching pursuit algorithm.
 

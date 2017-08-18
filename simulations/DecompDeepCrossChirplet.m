@@ -8,6 +8,7 @@
 % First, let's synthesize the simulated signal, which consists of an upward
 % chirplet |s1|, chirp-rate changing from 0 to $\pi$, and a downwoard
 % chriplet |s2|, from $\pi$ to 0.
+rng default % for repeating the experiments
 N   = 100; % signal size
 
 % use Cohen equation
@@ -90,7 +91,7 @@ show_decomp(s, P, 'Clean signal', 'PType', p_type)
 % 
 
 %% 
-% * Adaptive chirplet spectrum of *clean* signal
+% * Adaptive chirplet spectrum (ACS) of *clean* signal
 % 
 % <<DecompDeepCrossChirplet_acs.png>>
 % 
@@ -107,7 +108,7 @@ P_mle  = test_mle_act(Q, tests, 'PType', p_type, 'Verbose', 'yes'); % with MLE a
 % Finally, we compare the results from MPEM and MLE algorithms.
 
 %%
-% Results from MPEM algorithm
+% *Results from MPEM algorithm*
 p_mpem = table2array(P_mpem);
 fig_name = get_fig_name('ExpectMax');
 show_decomp(spn, p_mpem, fig_name, 'PType', p_type) % on t-f plane
@@ -126,7 +127,7 @@ comp_decomp(s, spn, p_mpem, fig_name, 'PType', p_type) % on time domain
 % 
 
 %%
-% Results from MLE algorithm
+% *Results from MLE algorithm*
 p_mle = table2array(P_mle);
 fig_name = get_fig_name('MaxLikeliEst');
 show_decomp(spn, p_mle, fig_name, 'PType', p_type) % t-f plane

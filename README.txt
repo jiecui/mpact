@@ -15,7 +15,7 @@ To install the MPACT toolbox:
 6) Follow the instructions on the screen.
 
 %% LICENSE INFORMATION %
-MPACT v1.0 Copyright (C) 2017 Jie Cui
+MP-ACT v1.0 Copyright (C) 2017 Jie Cui
 
 This program is free software; you can redistribute it and/or 
 modify it under the terms of the GNU General Public License as published 
