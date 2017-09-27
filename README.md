@@ -9,6 +9,17 @@ Adatpive Chirplet Transform using Matching Pursuit Algorithm (MP-ACT)
 
 The code repository for **MPACT** is hosted on GitHub at https://github.com/jiecui/mpact.
 
+Installation
+------------
+1. Copy the files to the directory of your choice, e.g. ~/mpact/
+1. Within Matlab, go the directory where you have copied the files
+   e.g. >> cd(‘~/mpact/’);
+1. Add the directory and its subdirectories into MatLab search path.
+1. Type MatLab command, i.e. >> doc, to bring up MatLab help browser.
+1. Find “Adaptive Chirplet Transform with Matching Pursuit Toolbox” in
+   the section of Supplemental Software.
+1. Follow the instructions on the screen.
+
 References
 ----------
 * Cui, J. and D. Wang (2017). "Biosignal Analysis with Matching-Pursuit Based Adaptive Chirplet." arXive (pre-print)
