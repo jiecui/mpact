@@ -22,6 +22,8 @@ Installation
 
 References
 ----------
-* Cui, J. and D. Wang (2017). "Biosignal Analysis with Matching-Pursuit Based Adaptive Chirplet." arXive (pre-print)
+* Cui, J. and D. Wang (2017). "Biosignal Analysis with Matching-Pursuit Based Adaptive Chirplet." arXive (pre-print https://arxiv.org/abs/1709.08328)
 
 * Cui, J. and W. Wong (2006). "The adaptive chirplet transform and visual evoked potentials." IEEE Transactions on Biomedical Engineering 53(7): 1378-1384.
+
+* Cui, J., Wong, W., & Mann, S. (2005). ``Time-frequency analysis of visual evoked potentials using chirplet transform.'' Electronics Letters, 41(4), 217-218. 
