@@ -26,4 +26,4 @@ References
 
 * Cui, J. and W. Wong (2006). "The adaptive chirplet transform and visual evoked potentials." IEEE Transactions on Biomedical Engineering 53(7): 1378-1384.
 
-* Cui, J., Wong, W., & Mann, S. (2005). ``Time-frequency analysis of visual evoked potentials using chirplet transform.'' Electronics Letters, 41(4), 217-218. 
+* Cui, J., Wong, W., & Mann, S. (2005). "Time-frequency analysis of visual evoked potentials using chirplet transform." Electronics Letters, 41(4), 217-218. (PDF http://individual.utoronto.ca/jiecui/_private/Time_frequency_chirplet_vep.pdf)
