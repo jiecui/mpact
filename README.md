@@ -1,11 +1,6 @@
-MPACT
-=====
-
-Adatpive Chirplet Transform using Matching Pursuit Algorithm (MP-ACT)
-
+Matching Pursuit based Adatpive Chirplet Transform - MPACT
+==========================================================
 **MPACT** is an open-source MatLab(R) toolbox that implements multi-component chirplet signal analysis using matching pursuit algorithm.
-
-**MPACT** is protected by the GPL v3 Open Source License.
 
 The code repository for **MPACT** is hosted on GitHub at https://github.com/jiecui/mpact.
 
@@ -27,3 +22,7 @@ References
 * Cui, J. and W. Wong (2006). "The adaptive chirplet transform and visual evoked potentials." IEEE Transactions on Biomedical Engineering 53(7): 1378-1384.
 
 * Cui, J., Wong, W., & Mann, S. (2005). "Time-frequency analysis of visual evoked potentials using chirplet transform." Electronics Letters, 41(4), 217-218. (PDF http://individual.utoronto.ca/jiecui/_private/Time_frequency_chirplet_vep.pdf)
+
+License
+-------
+**MPACT** is distributed by the GPL v3 Open Source License.
