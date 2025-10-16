@@ -3,4 +3,4 @@
 % decomposition of the simulated signals.
 %
 % *   <matlab:web('DecompDeepCrossChirplet.html','-helpbrowser') Deecompose Deep Crossed Chirplets>
-% *   <matlab:web('CovariateExamples.html','-helpbrowser') Using the Covariate Class>
+% *   <matlab:web('MultiDecompChirplet.html','-helpbrowser') Multi-Decomposition Chirplet>
