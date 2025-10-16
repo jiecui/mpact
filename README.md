@@ -1,13 +1,13 @@
 Matching Pursuit Based Adaptive Chirplet Transform (MPACT)
 ==========================================================
 
-**MPACT** is an open-source MATLAB® toolbox that implements multi-component chirplet signal analysis
+**MPACT** is an open-source MATLAB® toolbox that implements multi-component
+chirplet signal analysis
 
 $$s\left( t\right) = {\left( \frac{\alpha }{\pi }\right)} ^{1/4}\exp \left[ -\frac{\alpha }{2}{\left( t-t_{0}\right)} ^{2}\right] \times \exp \left[ j\frac{\beta }{2}{\left( t-t_{0}\right)} ^{2}\right] \exp \left[ j\omega _{0}\left( t-t_{0}\right) \right]$$
 
-using matching pursuit algorithm.
-
-The code repository for **MPACT** is hosted on GitHub at https://github.com/jiecui/mpact.
+using matching pursuit algorithm.  The code repository for **MPACT** is
+hosted on GitHub at https://github.com/jiecui/mpact.
 
 Installation
 ------------
